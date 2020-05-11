@@ -1,9 +1,20 @@
 package sellermenu;
 
+import menu.ClientMenu;
+import menu.SellerMenu;
+import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import pages.FirstPage;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
 
-public class AddCar {
+public class AddCar implements ActionListener {
     private JFrame frame;
     private JTextField year,password,brand,model,price;
     private JButton back,addcar;
@@ -11,7 +22,7 @@ public class AddCar {
     public void GUICar(){
         JPanel panel = new JPanel();
         frame = new JFrame("Add Car");
-        frame.setSize(400, 400);
+        frame.setSize(450, 350);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         panel.setLayout(null);
@@ -64,16 +75,76 @@ public class AddCar {
         addcar = new JButton("Add Car");
         addcar.setBounds(140, 250, 100,25);
         panel.add(addcar);
-        //addcar.addActionListener(this);
+        addcar.addActionListener(this);
 
         //Back
         back = new JButton("Back");
         back.setBounds(260, 250, 80,25);
-       // back.addActionListener(this);
+        back.addActionListener((ActionListener) this);
         panel.add(back);
 
         frame.setVisible(true);
 
 
     }
+
+    public void addcar(){
+
+        JSONObject obj = new JSONObject();
+        Object p;
+        JSONParser parser = new JSONParser();
+        JSONArray list = new JSONArray();
+
+        //Copiere continut deja existent cu Parser
+        try{
+            FileReader readFile = new FileReader("src/main/resources/cars.json");
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if(p instanceof JSONArray)
+            {
+                list =(JSONArray)p;
+            }
+        } catch (ParseException | IOException ex) {
+            ex.printStackTrace();
+        }
+
+        //Adaugare continut nou
+        obj.put("Brand",brand.getText());
+        obj.put("Model",model.getText());
+        obj.put("Year",year.getText());
+        obj.put("Price",price.getText());
+
+        list.add(obj);
+
+        //Scriere in fisier continut nou
+        try{
+            File file=new File("src/main/resources/cars.json");
+            FileWriter fw=new FileWriter(file.getAbsoluteFile());
+            fw.write(list.toJSONString());
+            fw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if(e.getSource()==addcar)
+        {
+            addcar();
+            JOptionPane.showMessageDialog(frame, "Car Added");
+        }
+
+        //Actiuni pentru butonul Back
+        if(e.getSource()==back)
+        {
+            frame.setVisible(false);
+            FirstPage bfp = new FirstPage();
+            bfp.startProgram();
+        }
+
+    }
 }
+

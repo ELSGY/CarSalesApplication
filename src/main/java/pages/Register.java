@@ -126,12 +126,12 @@ public class Register implements ActionListener {
         }
 
         //Adaugare continut nou
-        obj.put("name",name.getText());
-        obj.put("email",email.getText());
-        obj.put("username",username.getText());
-        obj.put("age",age.getText());
-        obj.put("password",password.getText());
-        obj.put("function",(String)function.getSelectedItem());
+        obj.put("Name",name.getText());
+        obj.put("Email",email.getText());
+        obj.put("Username",username.getText());
+        obj.put("Age",age.getText());
+        obj.put("Password",password.getText());
+        obj.put("Function",(String)function.getSelectedItem());
 
         list.add(obj);
 
@@ -166,7 +166,6 @@ public class Register implements ActionListener {
         if(e.getSource()==register)
         {
            registerbutton();
-
         }
 
         //Actiuni pentru butonul Back
