@@ -93,90 +93,93 @@ public class FirstPage implements ActionListener {
         frame.setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
-         Register register;
-         int ok=0;
+    private void loginbutton(){
+
+        boolean ok = false;
 
         String user = username.getText();
         String pass = password.getText();
         String function;
 
-    //Citire date din fisier .json
+        //Citire date din fisier .json
 
         JSONParser parser = new JSONParser();
         JSONObject compare = new JSONObject();
         Object p;
         JSONArray array = new JSONArray();
 
-    //Actiuni pentru butonul Log In
-        if(e.getSource()==login) {
-            if ((checkclient.isSelected() && checkseller.isSelected()) || (!checkclient.isSelected() && !checkseller.isSelected())) {
+        if ((checkclient.isSelected() && checkseller.isSelected()) || (!checkclient.isSelected() && !checkseller.isSelected())) {
 
+            JOptionPane.showMessageDialog(frame, "Invalid");
+        }
+        else {
+            try {
+                FileReader readFile = new FileReader("src/main/resources/data.json");
+                BufferedReader read = new BufferedReader(readFile);
+                p = parser.parse(read);
+                if (p instanceof JSONArray) {
+                    array = (JSONArray) p;
+                }
+            } catch (ParseException | IOException parseException) {
+                parseException.printStackTrace();
+            }
+            // System.out.println(array.toString());
+
+            compare.put("username", user);
+            compare.put("password", pass);
+
+            if (checkclient.isSelected()) {
+                function = checkclient.getText();
+            } else {
+                function = checkseller.getText();
+            }
+
+            compare.put("function", function);
+
+            //  System.out.println(compare.toString());
+
+            Iterator<JSONObject> itr = array.iterator();
+
+            while(itr.hasNext()) {
+                JSONObject obj = itr.next();
+
+                if (obj.get("password").equals(compare.get("password")) && obj.get("function").equals(compare.get("function")) && obj.get("username").equals(compare.get("username"))) {
+                    frame.setVisible(false);
+                    ok = true;
+
+                    if (checkclient.isSelected()) {
+                        ClientMenu client;
+                        client = new ClientMenu();
+                        client.menu();
+                        break;
+                    }
+
+                    if (checkseller.isSelected()) {
+                        SellerMenu seller;
+                        seller = new SellerMenu();
+                        seller.sellermenu();
+                        break;
+                    }
+
+
+
+                }
+
+            }
+            if(ok == false) {
                 JOptionPane.showMessageDialog(frame, "Invalid");
             }
-            else {
-                try {
-                    FileReader readFile = new FileReader("src/main/java/data/data.json");
-                    BufferedReader read = new BufferedReader(readFile);
-                    p = parser.parse(read);
-                    if (p instanceof JSONArray) {
-                        array = (JSONArray) p;
-                    }
-                } catch (ParseException | IOException parseException) {
-                    parseException.printStackTrace();
-                }
-              // System.out.println(array.toString());
-
-                compare.put("username", user);
-                compare.put("password", pass);
-
-                if (checkclient.isSelected()) {
-                    function = checkclient.getText();
-                } else {
-                    function = checkseller.getText();
-                }
-
-                compare.put("function", function);
-
-              //  System.out.println(compare.toString());
-
-                Iterator<JSONObject> itr = array.iterator();
-
-                while(itr.hasNext()) {
-                    JSONObject obj = itr.next();
-
-                    System.out.println(compare.toString());
-                    System.out.println(obj.toString());
-
-                    if (obj.get("password").equals(compare.get("password")) && obj.get("function").equals(compare.get("function")) && obj.get("username").equals(compare.get("username"))) {
-                        frame.setVisible(false);
-                        ok=1;
-
-                        if (checkclient.isSelected()) {
-                            ClientMenu client;
-                            client = new ClientMenu();
-                            client.menu();
-                            break;
-                        }
-
-                        if (checkseller.isSelected()) {
-                            SellerMenu seller;
-                            seller = new SellerMenu();
-                            seller.sellermenu();
-                            break;
-                        }
 
 
+        }
+    }
+    public void actionPerformed(ActionEvent e) {
+         Register register;
 
-                    }
+    //Actiuni pentru butonul Log In
+        if(e.getSource()==login) {
+            loginbutton();
 
-                }
-                if(ok == 0) {
-                    JOptionPane.showMessageDialog(frame, "Invalid");
-                }
-
-
-            }
         }
 
 
