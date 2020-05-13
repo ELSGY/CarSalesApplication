@@ -1,7 +1,5 @@
 package sellermenu;
 
-import menu.ClientMenu;
-import menu.SellerMenu;
 import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -16,7 +14,7 @@ import java.io.*;
 
 public class AddCar implements ActionListener {
     private JFrame frame;
-    private JTextField year,password,brand,model,price;
+    private JTextField year,brand,model,price;
     private JButton back,addcar;
 
     public void GUICar(){
