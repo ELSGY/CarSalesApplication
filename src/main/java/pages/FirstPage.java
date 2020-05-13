@@ -1,8 +1,6 @@
 package pages;
 
-import menu.ClientMenu;
-import menu.SellerMenu;
-
+import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -31,7 +29,7 @@ public class FirstPage implements ActionListener {
         JPanel panel;
 
         panel=new JPanel();
-        frame=new JFrame();
+        frame=new JFrame("Welcome");
 
         frame.setSize(360,270);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

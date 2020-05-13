@@ -18,7 +18,7 @@ public class ClientMenu implements ActionListener {
     public void menu() {
 
         panel = new JPanel();
-        frame = new JFrame();
+        frame = new JFrame("Client");
 
         frame.setSize(350, 225);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

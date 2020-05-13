@@ -7,8 +7,7 @@ import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
 
-import menu.ClientMenu;
-import menu.SellerMenu;
+import menu.*;
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.*;
