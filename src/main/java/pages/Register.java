@@ -7,6 +7,8 @@ import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
 
+import menu.ClientMenu;
+import menu.SellerMenu;
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.*;
@@ -103,51 +105,67 @@ public class Register implements ActionListener {
         frame.setVisible(true);
     }
 
+    private void registerbutton(){
+
+        JSONObject obj = new JSONObject();
+        Object p;
+        JSONParser parser = new JSONParser();
+        JSONArray list = new JSONArray();
+
+        //Copiere continut deja existent cu Parser
+        try{
+            FileReader readFile = new FileReader("src/main/resources/data.json");
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if(p instanceof JSONArray)
+            {
+                list =(JSONArray)p;
+            }
+        } catch (ParseException | IOException ex) {
+            ex.printStackTrace();
+        }
+
+        //Adaugare continut nou
+        obj.put("Name",name.getText());
+        obj.put("Email",email.getText());
+        obj.put("Username",username.getText());
+        obj.put("Age",age.getText());
+        obj.put("Password",password.getText());
+        obj.put("Function",(String)function.getSelectedItem());
+
+        list.add(obj);
+
+        //Scriere in fisier continut nou
+        try{
+            File file=new File("src/main/resources/data.json");
+            FileWriter fw=new FileWriter(file.getAbsoluteFile());
+            fw.write(list.toJSONString());
+            //fw.flush();
+            fw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        frame.setVisible(false);
+
+        if(function.getSelectedItem().toString().equals("Client")){
+            ClientMenu client;
+            client = new ClientMenu();
+            client.menu();
+        }
+        else {
+            SellerMenu seller;
+            seller = new SellerMenu();
+            seller.sellermenu();
+        }
+
+    }
     @Override
     public void actionPerformed(ActionEvent e){
 
         //Actiuni pentru butonul Register
         if(e.getSource()==register)
         {
-            JSONObject obj = new JSONObject();
-            Object p;
-            JSONParser parser = new JSONParser();
-            JSONArray list = new JSONArray();
-
-            //Copiere continut deja existent cu Parser
-            try{
-                FileReader readFile = new FileReader("src/main/java/data/data.json");
-                BufferedReader read = new BufferedReader(readFile);
-                p = parser.parse(read);
-                if(p instanceof JSONArray)
-                {
-                   list =(JSONArray)p;
-                }
-            } catch (ParseException | IOException ex) {
-                ex.printStackTrace();
-            }
-
-            //Adaugare continut nou
-            obj.put("name",name.getText());
-            obj.put("email",email.getText());
-            obj.put("username",username.getText());
-            obj.put("age",age.getText());
-            obj.put("password",password.getText());
-            obj.put("function",(String)function.getSelectedItem());
-
-            list.add(obj);
-
-            //Scriere in fisier continut nou
-            try{
-                File file=new File("src/main/java/data/data.json");
-                FileWriter fw=new FileWriter(file.getAbsoluteFile());
-                fw.write(list.toJSONString());
-                //fw.flush();
-                fw.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
+           registerbutton();
         }
 
         //Actiuni pentru butonul Back

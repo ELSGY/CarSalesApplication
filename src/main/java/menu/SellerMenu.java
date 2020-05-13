@@ -1,6 +1,7 @@
 package menu;
 
 import pages.FirstPage;
+import sellermenu.AddCar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,7 +82,9 @@ public class SellerMenu implements ActionListener{
 
         //Actiuni pentru butonul Add Car
         if(e.getSource()==acar){
-
+            frame.setVisible(false);
+            AddCar a = new AddCar();
+            a.GUICar();
         }
 
         //Actiuni pentru butonul View Cars
