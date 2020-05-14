@@ -43,9 +43,9 @@ public class ViewCars implements ActionListener {
         model.addColumn("Price");
         JTable table=new JTable(model);
 
+
         //Parcurgere fisier cars.json pentru preluare detalii masini
         JSONParser parser = new JSONParser();
-        JSONObject compare = new JSONObject();
         Object p;
         JSONArray array = new JSONArray();
 
@@ -60,30 +60,41 @@ public class ViewCars implements ActionListener {
             parseException.printStackTrace();
         }
 
-        //Transformare din JSONArray in String[] si adaugare in tabel
-        for (JSONObject obj : (Iterable<JSONObject>) array) {
-            data[0]=obj.get("Brand").toString();
-            data[1]=obj.get("Model").toString();
-            data[2]=obj.get("Year").toString();
-            data[3]=obj.get("Price").toString();
-            model.addRow(new String[] {data[0],data[1],data[2],data[3]});
-
+        if(array.isEmpty()){
+            JOptionPane.showMessageDialog(frame, "Empty list!" );
+            SellerMenu bfp = new SellerMenu();
+            bfp.sellermenu();
         }
+        else {
 
-        //Setari tabel
-        table.setPreferredScrollableViewportSize(new Dimension(350,200));
-        table.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10,10,210,200);
-        panel.add(scrollPane);
 
-        //Back
-        back = new JButton("Back");
-        back.setBounds(360, 620, 80,25);
-        back.addActionListener(this);
-        panel.add(back);
+            //Transformare din JSONArray in String[] si adaugare in tabel
+            for (JSONObject obj : (Iterable<JSONObject>) array) {
+                data[0] = obj.get("Brand").toString();
+                data[1] = obj.get("Model").toString();
+                data[2] = obj.get("Year").toString();
+                data[3] = obj.get("Price").toString();
+                model.addRow(new String[]{data[0], data[1], data[2], data[3]});
 
-        frame.setVisible(true);
+            }
+
+            //Setari tabel
+            table.setPreferredScrollableViewportSize(new Dimension(380, 200));
+            table.setFillsViewportHeight(true);
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.setBounds(10, 10, 250, 240);
+            panel.add(scrollPane);
+
+
+            //Back
+            back = new JButton("Back");
+            back.setBounds(360, 620, 80, 25);
+            back.addActionListener(this);
+            panel.add(back);
+
+
+            frame.setVisible(true);
+        }
 
     }
 
