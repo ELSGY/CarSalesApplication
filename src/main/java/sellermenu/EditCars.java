@@ -18,6 +18,8 @@ import java.io.IOException;
 public class EditCars implements ActionListener {
     private JFrame frame;
     private JButton back;
+    private JTable table;
+    private JButton edit;
 
     public void GUIEdit() {
 
@@ -36,7 +38,7 @@ public class EditCars implements ActionListener {
         model.addColumn("Model");
         model.addColumn("Year");
         model.addColumn("Price");
-        JTable table = new JTable(model);
+        table = new JTable(model);
 
         //Parcurgere fisier cars.json pentru preluare detalii masini
         JSONParser parser = new JSONParser();
@@ -82,8 +84,9 @@ public class EditCars implements ActionListener {
 
 
             //Edit Car
-            JButton edit = new JButton("Edit");
+            edit = new JButton("Edit");
             edit.setBounds(300, 620, 80, 25);
+            edit.addActionListener(this);
             panel.add(edit);
 
             //Back
@@ -96,6 +99,19 @@ public class EditCars implements ActionListener {
         }
     }
 
+    public void EdButton(){
+        String brand = JOptionPane.showInputDialog("Brand");
+        String model = JOptionPane.showInputDialog("Model");
+        String year = JOptionPane.showInputDialog("Year");
+        String price = JOptionPane.showInputDialog("Price");
+        //Edit button
+        table.getModel().setValueAt(brand, table.getSelectedRow(), 0);
+        table.getModel().setValueAt(model, table.getSelectedRow(), 1);
+        table.getModel().setValueAt(year, table.getSelectedRow(), 2);
+        table.getModel().setValueAt(price, table.getSelectedRow(), 3);
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -105,6 +121,9 @@ public class EditCars implements ActionListener {
             frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
             bfp.sellermenu();
+        }
+        if(e.getSource() == edit){
+            EdButton();
         }
 
     }
