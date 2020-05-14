@@ -100,16 +100,21 @@ public class EditCars implements ActionListener {
     }
 
     public void EdButton(){
-        String brand = JOptionPane.showInputDialog("Brand");
-        String model = JOptionPane.showInputDialog("Model");
-        String year = JOptionPane.showInputDialog("Year");
-        String price = JOptionPane.showInputDialog("Price");
-        //Edit button
-        table.getModel().setValueAt(brand, table.getSelectedRow(), 0);
-        table.getModel().setValueAt(model, table.getSelectedRow(), 1);
-        table.getModel().setValueAt(year, table.getSelectedRow(), 2);
-        table.getModel().setValueAt(price, table.getSelectedRow(), 3);
 
+        if(table.getSelectedRow() >= 0) {
+
+            String brand = JOptionPane.showInputDialog("Brand");
+            String model = JOptionPane.showInputDialog("Model");
+            String year = JOptionPane.showInputDialog("Year");
+            String price = JOptionPane.showInputDialog("Price");
+            //Edit button
+            table.getModel().setValueAt(brand, table.getSelectedRow(), 0);
+            table.getModel().setValueAt(model, table.getSelectedRow(), 1);
+            table.getModel().setValueAt(year, table.getSelectedRow(), 2);
+            table.getModel().setValueAt(price, table.getSelectedRow(), 3);
+        }else {
+            JOptionPane.showMessageDialog(edit, "You must select a car");
+        }
     }
 
     @Override
