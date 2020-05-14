@@ -1,5 +1,6 @@
 package sellermenu;
 
+import menu.SellerMenu;
 import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -139,8 +140,8 @@ public class AddCar implements ActionListener {
         if(e.getSource()==back)
         {
             frame.setVisible(false);
-            FirstPage bfp = new FirstPage();
-            bfp.startProgram();
+            SellerMenu bfp = new SellerMenu();
+            bfp.sellermenu();
         }
 
     }

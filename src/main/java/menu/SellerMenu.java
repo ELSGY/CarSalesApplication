@@ -1,7 +1,7 @@
 package menu;
 
 import pages.FirstPage;
-import sellermenu.AddCar;
+import sellermenu.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class SellerMenu implements ActionListener{
     public void sellermenu(){
 
         panel = new JPanel();
-        frame = new JFrame();
+        frame = new JFrame("Seller");
 
         frame.setSize(350, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,18 +29,20 @@ public class SellerMenu implements ActionListener{
         panel.setBackground(Color.LIGHT_GRAY);
 
         //Seller Menu
-        title = new JLabel("Menu",SwingConstants.CENTER);
-        title.setBounds(100,10,80,25);
+        title = new JLabel("Menu");
+        title.setBounds(130,10,80,25);
         title.setFont(new Font(title.getFont().getName(), Font.BOLD, 18));
         panel.add(title);
 
         //Options
         acar= new JButton("Add Car");
         acar.setBounds(40,50,125,25);
+        acar.addActionListener(this);
         panel.add(acar);
 
         vcars= new JButton("View Cars");
         vcars.setBounds(40,90,125,25);
+        vcars.addActionListener(this);
         panel.add(vcars);
 
         ecar= new JButton("Edit car");
@@ -70,6 +72,7 @@ public class SellerMenu implements ActionListener{
             FirstPage back=new FirstPage();
             back.startProgram();
         }
+
         //Actiuni pentru butonul View reguests
         if(e.getSource()==vreq){
 
@@ -90,6 +93,9 @@ public class SellerMenu implements ActionListener{
         //Actiuni pentru butonul View Cars
         if(e.getSource()==vcars){
 
+            frame.setVisible(false);
+            ViewCars viewCars=new ViewCars();
+            viewCars.GUIView();
         }
     }
 }
