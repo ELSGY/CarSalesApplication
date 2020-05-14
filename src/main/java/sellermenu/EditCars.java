@@ -15,7 +15,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class EditCar implements ActionListener {
+public class EditCars implements ActionListener {
     private JFrame frame;
     private JButton back;
 
@@ -54,26 +54,34 @@ public class EditCar implements ActionListener {
             parseException.printStackTrace();
         }
 
-        //Transformare din JSONArray in String[] si adaugare in tabel
-        String[] data = new String[4];
-        for (JSONObject obj : (Iterable<JSONObject>) array) {
-            data[0] = obj.get("Brand").toString();
-            data[1] = obj.get("Model").toString();
-            data[2] = obj.get("Year").toString();
-            data[3] = obj.get("Price").toString();
-            model.addRow(new String[]{data[0], data[1], data[2], data[3]});
-
+        if(array.isEmpty()){
+            JOptionPane.showMessageDialog(frame, "There is no car to edit!" );
+            SellerMenu bfp = new SellerMenu();
+            bfp.sellermenu();
         }
-
-        //Setari tabel
-        table.setPreferredScrollableViewportSize(new Dimension(380, 200));
-        table.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(10, 10, 250, 240);
-        panel.add(scrollPane);
+        else {
 
 
-             //Edit Car
+            //Transformare din JSONArray in String[] si adaugare in tabel
+            String[] data = new String[4];
+            for (JSONObject obj : (Iterable<JSONObject>) array) {
+                data[0] = obj.get("Brand").toString();
+                data[1] = obj.get("Model").toString();
+                data[2] = obj.get("Year").toString();
+                data[3] = obj.get("Price").toString();
+                model.addRow(new String[]{data[0], data[1], data[2], data[3]});
+
+            }
+
+            //Setari tabel
+            table.setPreferredScrollableViewportSize(new Dimension(380, 200));
+            table.setFillsViewportHeight(true);
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.setBounds(10, 10, 250, 240);
+            panel.add(scrollPane);
+
+
+            //Edit Car
             JButton edit = new JButton("Edit");
             edit.setBounds(300, 620, 80, 25);
             panel.add(edit);
@@ -85,7 +93,7 @@ public class EditCar implements ActionListener {
             panel.add(back);
 
             frame.setVisible(true);
-
+        }
     }
 
     @Override

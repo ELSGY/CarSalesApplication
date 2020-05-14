@@ -92,7 +92,6 @@ public class ViewCars implements ActionListener {
             back.addActionListener(this);
             panel.add(back);
 
-
             frame.setVisible(true);
         }
 

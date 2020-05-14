@@ -47,6 +47,7 @@ public class SellerMenu implements ActionListener{
 
         ecar= new JButton("Edit car");
         ecar.setBounds(40,130,125,25);
+        ecar.addActionListener(this);
         panel.add(ecar);
 
         vreq= new JButton("View Requests");
@@ -81,9 +82,8 @@ public class SellerMenu implements ActionListener{
         //Actiuni pentru butonul Edit Car
         if(e.getSource()==ecar){
             frame.setVisible(false);
-            EditCar editCar = new EditCar();
-            editCar.GUIEdit();
-
+            EditCars eCars = new EditCars();
+            eCars.GUIEdit();
         }
 
         //Actiuni pentru butonul Add Car
