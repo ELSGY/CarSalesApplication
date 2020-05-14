@@ -9,7 +9,9 @@ public class Main{
       //FirstPage first=new FirstPage();
       //first.startProgram();
 
-        SellerMenu seller=new SellerMenu();
-        seller.sellermenu();
+        //SellerMenu seller=new SellerMenu();
+       // seller.sellermenu();
+        EditCar e = new EditCar();
+        e.GUIEdit();
     }
 }

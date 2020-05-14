@@ -1,16 +1,26 @@
 package sellermenu;
 
+import menu.SellerMenu;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class EditCar {
     private JFrame frame;
     private JButton back;
+    private JButton edit;
     public void GUIEdit() {
 
         JPanel panel = new JPanel();
-        frame = new JFrame("View Cars");
+        frame = new JFrame("Edit Car");
         frame.setSize(450, 320);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
@@ -26,13 +36,14 @@ public class EditCar {
         model.addColumn("Price");
         JTable table=new JTable(model);
 
-        //Back
-        back = new JButton("Back");
-        back.setBounds(360, 620, 80, 25);
-        panel.add(back);
-
+        //Setari tabel
+        table.setPreferredScrollableViewportSize(new Dimension(380, 200));
+        table.setFillsViewportHeight(true);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(10, 10, 250, 240);
+        panel.add(scrollPane);
 
         frame.setVisible(true);
-    }
 
-}
+
+} }
