@@ -1,17 +1,24 @@
 package sellermenu;
 
 import menu.SellerMenu;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class EditCar implements ActionListener {
     private JFrame frame;
     private JButton back;
-    private JButton edit;
+
     public void GUIEdit() {
 
         JPanel panel = new JPanel();
@@ -23,13 +30,40 @@ public class EditCar implements ActionListener {
 
         panel.setBackground(Color.lightGray);
 
-        String[] data = new String[4];
+
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Brand");
         model.addColumn("Model");
         model.addColumn("Year");
         model.addColumn("Price");
         JTable table = new JTable(model);
+
+        //Parcurgere fisier cars.json pentru preluare detalii masini
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
+
+        try {
+            FileReader readFile = new FileReader("src/main/resources/cars.json");
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
+            }
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+        }
+
+        //Transformare din JSONArray in String[] si adaugare in tabel
+        String[] data = new String[4];
+        for (JSONObject obj : (Iterable<JSONObject>) array) {
+            data[0] = obj.get("Brand").toString();
+            data[1] = obj.get("Model").toString();
+            data[2] = obj.get("Year").toString();
+            data[3] = obj.get("Price").toString();
+            model.addRow(new String[]{data[0], data[1], data[2], data[3]});
+
+        }
 
         //Setari tabel
         table.setPreferredScrollableViewportSize(new Dimension(380, 200));
@@ -38,18 +72,20 @@ public class EditCar implements ActionListener {
         scrollPane.setBounds(10, 10, 250, 240);
         panel.add(scrollPane);
 
-        //Edit Car
-        edit = new JButton("Edit");
-        edit.setBounds(300, 620, 80, 25);
-        panel.add(edit);
 
-        //Back
-        back = new JButton("Back");
-        back.setBounds(360, 620, 80, 25);
-        back.addActionListener(this);
-        panel.add(back);
+             //Edit Car
+            JButton edit = new JButton("Edit");
+            edit.setBounds(300, 620, 80, 25);
+            panel.add(edit);
 
-        frame.setVisible(true);
+            //Back
+            back = new JButton("Back");
+            back.setBounds(360, 620, 80, 25);
+            back.addActionListener(this);
+            panel.add(back);
+
+            frame.setVisible(true);
+
     }
 
     @Override

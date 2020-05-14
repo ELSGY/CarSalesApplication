@@ -81,8 +81,8 @@ public class SellerMenu implements ActionListener{
         //Actiuni pentru butonul Edit Car
         if(e.getSource()==ecar){
             frame.setVisible(false);
-            EditCar edit = new EditCar();
-            edit.GUIEdit();
+            EditCar editCar = new EditCar();
+            editCar.GUIEdit();
 
         }
 
