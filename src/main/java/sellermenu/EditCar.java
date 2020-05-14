@@ -1,19 +1,14 @@
 package sellermenu;
 
 import menu.SellerMenu;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class EditCar {
+public class EditCar implements ActionListener {
     private JFrame frame;
     private JButton back;
     private JButton edit;
@@ -34,7 +29,7 @@ public class EditCar {
         model.addColumn("Model");
         model.addColumn("Year");
         model.addColumn("Price");
-        JTable table=new JTable(model);
+        JTable table = new JTable(model);
 
         //Setari tabel
         table.setPreferredScrollableViewportSize(new Dimension(380, 200));
@@ -43,7 +38,32 @@ public class EditCar {
         scrollPane.setBounds(10, 10, 250, 240);
         panel.add(scrollPane);
 
+        //Edit Car
+        edit = new JButton("Edit");
+        edit.setBounds(300, 620, 80, 25);
+        panel.add(edit);
+
+        //Back
+        back = new JButton("Back");
+        back.setBounds(360, 620, 80, 25);
+        back.addActionListener(this);
+        panel.add(back);
+
         frame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        //Actiuni pentru butonul Back
+        if(e.getSource()==back)
+        {
+            frame.setVisible(false);
+            SellerMenu bfp = new SellerMenu();
+            bfp.sellermenu();
+        }
+
+    }
 
 
-} }
+}
