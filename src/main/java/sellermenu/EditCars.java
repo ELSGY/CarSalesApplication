@@ -6,14 +6,19 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 
 public class EditCars implements ActionListener {
     private JFrame frame;
@@ -75,12 +80,14 @@ public class EditCars implements ActionListener {
 
             }
 
+
             //Setari tabel
             table.setPreferredScrollableViewportSize(new Dimension(380, 200));
             table.setFillsViewportHeight(true);
             JScrollPane scrollPane = new JScrollPane(table);
             scrollPane.setBounds(10, 10, 250, 240);
             panel.add(scrollPane);
+
 
 
             //Edit Car
@@ -104,14 +111,47 @@ public class EditCars implements ActionListener {
         if(table.getSelectedRow() >= 0) {
 
             String brand = JOptionPane.showInputDialog("Brand");
-            String model = JOptionPane.showInputDialog("Model");
-            String year = JOptionPane.showInputDialog("Year");
-            String price = JOptionPane.showInputDialog("Price");
+           // String model = JOptionPane.showInputDialog("Model");
+           // String year = JOptionPane.showInputDialog("Year");
+           // String price = JOptionPane.showInputDialog("Price");
             //Edit button
             table.getModel().setValueAt(brand, table.getSelectedRow(), 0);
-            table.getModel().setValueAt(model, table.getSelectedRow(), 1);
-            table.getModel().setValueAt(year, table.getSelectedRow(), 2);
-            table.getModel().setValueAt(price, table.getSelectedRow(), 3);
+           // table.getModel().setValueAt(model, table.getSelectedRow(), 1);
+           // table.getModel().setValueAt(year, table.getSelectedRow(), 2);
+            //table.getModel().setValueAt(price, table.getSelectedRow(), 3);
+
+            ObjectMapper mapper = new ObjectMapper();
+            String key = "Brand"; //whatever
+
+            //Read from file
+            JSONObject root = new JSONObject();
+            try {
+                root = mapper.readValue(new File("src/main/resources/cars.json"), JSONObject.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String val_newer = brand;
+            String val_older = (String) root.get("Brand");
+
+            System.out.println(val_newer);
+            System.out.println(val_older);
+            //Compare values
+            if(!val_newer.equals(val_older))
+            {
+                //Update value in object
+                root.put(key,val_newer);
+
+                //Write into the file
+                try (FileWriter file = new FileWriter("src/main/resources/cars.json"))
+                {
+                    file.write(root.toString());
+                    System.out.println("Successfully updated json object to file...!!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }else {
             JOptionPane.showMessageDialog(edit, "You must select a car");
         }
