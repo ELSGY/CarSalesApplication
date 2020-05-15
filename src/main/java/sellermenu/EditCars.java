@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -107,52 +108,51 @@ public class EditCars implements ActionListener {
     }
 
     public void EdButton(){
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray list = new JSONArray();
+        org.json.JSONObject obje = new org.json.JSONObject();
 
         if(table.getSelectedRow() >= 0) {
 
             String brand = JOptionPane.showInputDialog("Brand");
-           // String model = JOptionPane.showInputDialog("Model");
-           // String year = JOptionPane.showInputDialog("Year");
-           // String price = JOptionPane.showInputDialog("Price");
+            String model = JOptionPane.showInputDialog("Model");
+            String year = JOptionPane.showInputDialog("Year");
+            String price = JOptionPane.showInputDialog("Price");
             //Edit button
             table.getModel().setValueAt(brand, table.getSelectedRow(), 0);
-           // table.getModel().setValueAt(model, table.getSelectedRow(), 1);
-           // table.getModel().setValueAt(year, table.getSelectedRow(), 2);
-            //table.getModel().setValueAt(price, table.getSelectedRow(), 3);
+            table.getModel().setValueAt(model, table.getSelectedRow(), 1);
+            table.getModel().setValueAt(year, table.getSelectedRow(), 2);
+            table.getModel().setValueAt(price, table.getSelectedRow(), 3);
 
-            ObjectMapper mapper = new ObjectMapper();
-            String key = "Brand"; //whatever
-
-            //Read from file
-            JSONObject root = new JSONObject();
-            try {
-                root = mapper.readValue(new File("src/main/resources/cars.json"), JSONObject.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            String val_newer = brand;
-            String val_older = (String) root.get("Brand");
-
-            System.out.println(val_newer);
-            System.out.println(val_older);
-            //Compare values
-            if(!val_newer.equals(val_older))
-            {
-                //Update value in object
-                root.put(key,val_newer);
-
-                //Write into the file
-                try (FileWriter file = new FileWriter("src/main/resources/cars.json"))
+            //Copiere continut deja existent cu Parser
+            try{
+                FileReader readFile = new FileReader("src/main/resources/cars.json");
+                BufferedReader read = new BufferedReader(readFile);
+                p = parser.parse(read);
+                if(p instanceof JSONArray)
                 {
-                    file.write(root.toString());
-                    System.out.println("Successfully updated json object to file...!!");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    list =(JSONArray)p;
                 }
+            } catch (ParseException | IOException ex) {
+                ex.printStackTrace();
             }
 
-        }else {
+            obje.put("Brand", brand);
+            obje.put("Model", model);
+            obje.put("Year", year);
+            obje.put("Price", price);
+
+            Iterator<JSONObject> itr = list.iterator();
+
+            while(itr.hasNext()) {
+                JSONObject obj = itr.next();
+
+              // if (obj.get("Brand").equals(obje.get(String.valueOf(table.getSelectedRow())) && obj.get("Model").equals(obje.get("Model")) && obj.get("Year").equals(obje.get("Year")) && obj.get("Price").equals(obje.get("Price"))) {
+
+            }
+
+                }else {
             JOptionPane.showMessageDialog(edit, "You must select a car");
         }
     }
