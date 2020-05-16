@@ -115,6 +115,7 @@ public class EditCars implements ActionListener {
         Object p;
         JSONArray list = new JSONArray();
         org.json.JSONObject obje = new org.json.JSONObject();
+        int index = (Integer) table.getValueAt(table.getSelectedRow(),0);//Preluare index
 
         if(table.getSelectedRow() >= 0) {//Daca row-ul este selectat
 
@@ -124,11 +125,46 @@ public class EditCars implements ActionListener {
             String price = JOptionPane.showInputDialog("Price");
 
             //Edit button
-            table.getModel().setValueAt(brand, table.getSelectedRow(), 1);
-            table.getModel().setValueAt(model, table.getSelectedRow(), 2);
-            table.getModel().setValueAt(year, table.getSelectedRow(), 3);
-            table.getModel().setValueAt(price, table.getSelectedRow(), 4);
+            if(brand.isEmpty()) {
 
+                table.getValueAt(index - 1, 1);
+                obje.put("Brand", table.getValueAt(index - 1, 1));
+            }
+            else{
+                table.getModel().setValueAt(brand, table.getSelectedRow(), 1);
+                obje.put("Brand", brand);
+            }
+
+            if(model.isEmpty()) {
+                table.getValueAt(index - 1, 2);
+                obje.put("Model", table.getValueAt(index - 1, 2));
+            }
+            else {
+                table.getModel().setValueAt(model, table.getSelectedRow(), 2);
+                obje.put("Model", model);
+            }
+
+            if(year.isEmpty())
+            {
+                table.getValueAt(index - 1, 3);
+                obje.put("Year",table.getValueAt(index - 1, 3));
+            }
+            else
+            {
+                table.getModel().setValueAt(year, table.getSelectedRow(), 3);
+                obje.put("Year", year);
+
+            }
+            if(price.isEmpty())
+            {
+                table.getValueAt(index - 1, 4);
+                obje.put("Price",table.getValueAt(index - 1, 4));
+            }
+            else
+            {
+                table.getModel().setValueAt(price, table.getSelectedRow(), 4);
+                obje.put("Price", price);
+            }
             //Copiere continut deja existent cu Parser
             try{
                 FileReader readFile = new FileReader("src/main/resources/cars.json");
@@ -143,14 +179,9 @@ public class EditCars implements ActionListener {
             }
 
             //Stergere element selectat din fisier
-            int index = (Integer) table.getValueAt(table.getSelectedRow(),0);//Preluare index
             list.remove(index-1);
 
             //Adaugare element nou
-            obje.put("Brand", brand);
-            obje.put("Model", model);
-            obje.put("Year", year);
-            obje.put("Price", price);
             list.add(obje);
 
             //Rescriere elemente in fisier

@@ -87,7 +87,6 @@ public class ViewCars implements ActionListener {
             scrollPane.setBounds(10, 10, 250, 240);
             panel.add(scrollPane);
 
-
             //Back
             back = new JButton("Back");
             back.setBounds(360, 620, 80, 25);
