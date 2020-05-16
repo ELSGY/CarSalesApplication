@@ -26,7 +26,7 @@ public class ViewCars implements ActionListener {
 
     public void GUIView() {
         JPanel panel = new JPanel();
-        frame = new JFrame("View Cars");
+        frame = new JFrame("My cars");
         frame.setSize(450, 320);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
@@ -35,8 +35,9 @@ public class ViewCars implements ActionListener {
         panel.setBackground(Color.lightGray);
 
         //Tabel cu masini
-        String[] data = new String[4];
+        String[] data = new String[5];
         DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Index");
         model.addColumn("Brand");
         model.addColumn("Model");
         model.addColumn("Year");
@@ -67,14 +68,15 @@ public class ViewCars implements ActionListener {
         }
         else {
 
-
+            int index=1;
             //Transformare din JSONArray in String[] si adaugare in tabel
             for (JSONObject obj : (Iterable<JSONObject>) array) {
-                data[0] = obj.get("Brand").toString();
-                data[1] = obj.get("Model").toString();
-                data[2] = obj.get("Year").toString();
-                data[3] = obj.get("Price").toString();
-                model.addRow(new String[]{data[0], data[1], data[2], data[3]});
+                data[1] = obj.get("Brand").toString();
+                data[2] = obj.get("Model").toString();
+                data[3] = obj.get("Year").toString();
+                data[4] = obj.get("Price").toString();
+                model.addRow(new Object[]{index,data[1], data[2], data[3],data[4]});
+                index++;
 
             }
 
