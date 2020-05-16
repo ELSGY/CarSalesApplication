@@ -1,5 +1,4 @@
 import menu.SellerMenu;
-import pages.*;
 import sellermenu.*;
 
 public class Main{
@@ -11,5 +10,6 @@ public class Main{
 
         SellerMenu seller=new SellerMenu();
         seller.sellermenu();
+
     }
 }
