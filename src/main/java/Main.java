@@ -1,3 +1,4 @@
+import clientmenu.Application;
 import menu.SellerMenu;
 import sellermenu.*;
 
@@ -8,8 +9,8 @@ public class Main{
       //FirstPage first=new FirstPage();
       //first.startProgram();
 
-        SellerMenu seller=new SellerMenu();
-        seller.sellermenu();
+        Application ap=new Application();
+        ap.start();
 
     }
 }
