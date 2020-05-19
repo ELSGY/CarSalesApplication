@@ -1,5 +1,6 @@
 package menu;
 
+import clientmenu.Application;
 import pages.FirstPage;
 
 import javax.swing.*;
@@ -40,6 +41,7 @@ public class ClientMenu implements ActionListener {
 
         fapp= new JButton("Fill the application");
         fapp.setBounds(40,90,150, 25);
+        fapp.addActionListener(this);
         panel.add(fapp);
 
         logout= new JButton("Log out");
@@ -57,6 +59,14 @@ public class ClientMenu implements ActionListener {
             frame.setVisible(false);
             FirstPage back=new FirstPage();
             back.startProgram();
+        }
+
+        if(e.getSource()==fapp)
+        {
+            frame.setVisible(false);
+            Application ap=new Application();
+            ap.start();
+
         }
 
     }

@@ -123,8 +123,8 @@ public class FirstPage implements ActionListener {
             }
             // System.out.println(array.toString());
 
-            compare.put("username", user);
-            compare.put("password", pass);
+            compare.put("Username", user);
+            compare.put("Password", pass);
 
             if (checkclient.isSelected()) {
                 function = checkclient.getText();
@@ -132,7 +132,7 @@ public class FirstPage implements ActionListener {
                 function = checkseller.getText();
             }
 
-            compare.put("function", function);
+            compare.put("Function", function);
 
             //  System.out.println(compare.toString());
 
@@ -141,7 +141,7 @@ public class FirstPage implements ActionListener {
             while(itr.hasNext()) {
                 JSONObject obj = itr.next();
 
-                if (obj.get("password").equals(compare.get("password")) && obj.get("function").equals(compare.get("function")) && obj.get("username").equals(compare.get("username"))) {
+                if (obj.get("Password").equals(compare.get("Password")) && obj.get("Function").equals(compare.get("Function")) && obj.get("Username").equals(compare.get("Username"))) {
                     frame.setVisible(false);
                     ok = true;
 
@@ -158,13 +158,10 @@ public class FirstPage implements ActionListener {
                         seller.sellermenu();
                         break;
                     }
-
-
-
                 }
 
             }
-            if(ok == false) {
+            if(!ok) {
                 JOptionPane.showMessageDialog(frame, "Invalid");
             }
 

@@ -139,7 +139,6 @@ public class Register implements ActionListener {
             File file=new File("src/main/resources/data.json");
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
             fw.write(list.toJSONString());
-            //fw.flush();
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
