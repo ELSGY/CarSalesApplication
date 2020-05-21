@@ -10,12 +10,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 
-public class ViewRequests {
+public class ViewRequests implements ActionListener{
     private JTable table;
     private JFrame frame;
-
+    private JButton rej;
     private JButton acc;
     public void GUIReq(){
         JPanel panel = new JPanel();
@@ -54,7 +55,7 @@ public class ViewRequests {
         }
 
         if(array.isEmpty()){
-            JOptionPane.showMessageDialog(frame, "Empty list!" );
+            JOptionPane.showMessageDialog(frame, "No requests!" );
             SellerMenu bfp = new SellerMenu();
             bfp.sellermenu();
         }
@@ -82,11 +83,13 @@ public class ViewRequests {
         //Accept button
         acc = new JButton("Accept");
         acc.setBounds(40, 40, 180, 280);
+        acc.addActionListener(this);
         panel.add(acc);
 
         //Reject Button
-        JButton rej = new JButton("Reject");
+        rej = new JButton("Reject");
         rej.setBounds(100, 40, 180, 280);
+        rej.addActionListener(this);
         panel.add(rej);
 
         frame.setVisible(true);
@@ -97,6 +100,8 @@ public class ViewRequests {
         JSONArray list = new JSONArray();
         org.json.JSONObject obje = new org.json.JSONObject();
         int index = (Integer) table.getValueAt(table.getSelectedRow(),0);//Preluare index
+
+        if(table.getSelectedRow() >= 0) {//Daca row-ul este selectat
 
         //Copiere continut deja existent cu Parser
         try{
@@ -121,14 +126,17 @@ public class ViewRequests {
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+        }}
+        else {
+            JOptionPane.showMessageDialog(acc, "You must select a requests");
         }
 
     }
 
     public void actionPerformed(ActionEvent e) {
 
-        //Actiuni pentru butonul Back
-        if(e.getSource()==acc)
+        //Actiuni pentru butonul Reject
+        if(e.getSource()==rej)
         {
             UpdateTable();
         }
