@@ -9,8 +9,10 @@ public class Main{
       //FirstPage first=new FirstPage();
       //first.startProgram();
 
-        Application ap=new Application();
-        ap.start();
+       // Application ap=new Application();
+       // ap.start();
+        ViewRequests req = new ViewRequests();
+        req.GUIReq();
 
     }
 }
