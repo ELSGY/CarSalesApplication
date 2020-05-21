@@ -76,6 +76,9 @@ public class SellerMenu implements ActionListener{
 
         //Actiuni pentru butonul View reguests
         if(e.getSource()==vreq){
+            frame.setVisible(false);
+            ViewRequests req = new ViewRequests();
+            req.GUIReq();
 
         }
 

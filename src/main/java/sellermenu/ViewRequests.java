@@ -6,12 +6,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.json.JsonArray;
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class ViewRequests implements ActionListener{
     private JTable table;
@@ -87,21 +91,25 @@ public class ViewRequests implements ActionListener{
         panel.add(acc);
 
         //Reject Button
-        rej = new JButton("Reject");
+        rej = new JButton("Decline");
         rej.setBounds(100, 40, 180, 280);
         rej.addActionListener(this);
         panel.add(rej);
 
         frame.setVisible(true);
     }
+    JSONArray list;
     private void UpdateTable(){
+        JSONArray array = new JSONArray();
+        ArrayList<String> row  = new ArrayList<String>();
+
         JSONParser parser = new JSONParser();
         Object p;
-        JSONArray list = new JSONArray();
+        list = new JSONArray();
         org.json.JSONObject obje = new org.json.JSONObject();
         int index = (Integer) table.getValueAt(table.getSelectedRow(),0);//Preluare index
 
-        if(table.getSelectedRow() >= 0) {//Daca row-ul este selectat
+        if(table.getSelectedRow() >= 0) {//Daca linia este selectata
 
         //Copiere continut deja existent cu Parser
         try{
@@ -116,17 +124,47 @@ public class ViewRequests implements ActionListener{
             ex.printStackTrace();
         }
 
-        //Stergere element selectat din fisier
-        list.remove(index-1);
-        //Rescriere elemente in fisier
-        try{
-            File file=new File("src/main/resources/requests.json");
-            FileWriter fw=new FileWriter(file.getAbsoluteFile());
-            fw.write(list.toJSONString());
-            fw.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }}
+        if(acc.isSelected()){
+
+                //Copiere continut deja existent cu Parser
+                try{
+                    FileReader readFile = new FileReader("src/main/resources/cars.json");
+                    BufferedReader read = new BufferedReader(readFile);
+                    p = parser.parse(read);
+                    if(p instanceof JSONArray)
+                    {
+                        array =(JSONArray)p;
+                    }
+                } catch (ParseException | IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                array.add(row);
+
+                try{
+                    File file=new File("src/main/resources/cars.json");
+                    FileWriter fw=new FileWriter(file.getAbsoluteFile());
+                    fw.write(array.toJSONString());
+                    fw.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }}
+
+            //Stergere element selectat din fisier
+            list.remove(index-1);
+
+            //Rescriere elemente in fisier
+            try{
+                File file=new File("src/main/resources/requests.json");
+                FileWriter fw=new FileWriter(file.getAbsoluteFile());
+                fw.write(list.toJSONString());
+                fw.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+
+        }
         else {
             JOptionPane.showMessageDialog(acc, "You must select a requests");
         }
@@ -135,10 +173,27 @@ public class ViewRequests implements ActionListener{
 
     public void actionPerformed(ActionEvent e) {
 
-        //Actiuni pentru butonul Reject
+        //Actiuni pentru butonul Decline
         if(e.getSource()==rej)
         {
             UpdateTable();
+            if(list.isEmpty())
+            { frame.setVisible(false);
+            SellerMenu bfp = new SellerMenu();
+            bfp.sellermenu();}
+            list.clear();
+
+
+        }
+        if (e.getSource() == acc)
+        {
+            UpdateTable();
+            if(list.isEmpty())
+            { frame.setVisible(false);
+                SellerMenu bfp = new SellerMenu();
+                bfp.sellermenu();}
+            list.clear();
+
         }
 
 
