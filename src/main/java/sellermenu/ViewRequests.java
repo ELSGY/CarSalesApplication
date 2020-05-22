@@ -22,6 +22,7 @@ public class ViewRequests implements ActionListener{
     private JFrame frame;
     private JButton rej;
     private JButton acc;
+    DefaultTableModel model;
     public void GUIReq(){
         JPanel panel = new JPanel();
         frame = new JFrame("View Requests");
@@ -34,7 +35,7 @@ public class ViewRequests implements ActionListener{
 
         //Tabel cereri
         String[] data = new String[5];
-        DefaultTableModel model = new DefaultTableModel();
+        model = new DefaultTableModel();
         model.addColumn("Index");
         model.addColumn("Brand");
         model.addColumn("Model");
@@ -101,8 +102,6 @@ public class ViewRequests implements ActionListener{
     JSONArray list;
     private void UpdateTable(){
         JSONArray array = new JSONArray();
-        ArrayList<String> row  = new ArrayList<String>();
-
         JSONParser parser = new JSONParser();
         Object p;
         list = new JSONArray();
@@ -123,8 +122,12 @@ public class ViewRequests implements ActionListener{
         } catch (ParseException | IOException ex) {
             ex.printStackTrace();
         }
+        obje.put("Brand", table.getValueAt(table.getSelectedRow(), 1).toString());
+        obje.put("Model", table.getValueAt(table.getSelectedRow(), 2).toString());
+        obje.put("Price", table.getValueAt(table.getSelectedRow(), 3).toString());
+        obje.put("Year", table.getValueAt(table.getSelectedRow(), 4).toString());
 
-        if(acc.isSelected()){
+        if(!acc.isSelected()){
 
                 //Copiere continut deja existent cu Parser
                 try{
@@ -139,7 +142,7 @@ public class ViewRequests implements ActionListener{
                     ex.printStackTrace();
                 }
 
-                array.add(row);
+                array.add(obje);
 
                 try{
                     File file=new File("src/main/resources/cars.json");
@@ -162,11 +165,16 @@ public class ViewRequests implements ActionListener{
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+          
 
 
         }
         else {
             JOptionPane.showMessageDialog(acc, "You must select a requests");
+            frame.setVisible(false);
+            SellerMenu bfp = new SellerMenu();
+            bfp.sellermenu();
+
         }
 
     }
@@ -177,11 +185,9 @@ public class ViewRequests implements ActionListener{
         if(e.getSource()==rej)
         {
             UpdateTable();
-            if(list.isEmpty())
-            { frame.setVisible(false);
-            SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();}
-            list.clear();
+            if(table == null){ frame.setVisible(false);
+                SellerMenu bfp = new SellerMenu();
+                bfp.sellermenu();}
 
 
         }
