@@ -79,7 +79,6 @@ public class SellerMenu implements ActionListener{
             frame.setVisible(false);
             ViewRequests req = new ViewRequests();
             req.GUIReq();
-
         }
 
         //Actiuni pentru butonul Edit Car

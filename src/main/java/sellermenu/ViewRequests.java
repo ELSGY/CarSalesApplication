@@ -6,16 +6,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.json.JsonArray;
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+
 
 public class ViewRequests implements ActionListener{
     private JTable table;
@@ -43,24 +40,13 @@ public class ViewRequests implements ActionListener{
         model.addColumn("Price");
         table=new JTable(model);
 
-        //Parcurgere fisier cars.json pentru preluare detalii masini
-        JSONParser parser = new JSONParser();
-        Object p;
-        JSONArray array = new JSONArray();
 
-        try {
-            FileReader readFile = new FileReader("src/main/resources/requests.json");
-            BufferedReader read = new BufferedReader(readFile);
-            p = parser.parse(read);
-            if (p instanceof JSONArray) {
-                array = (JSONArray) p;
-            }
-        } catch (ParseException | IOException parseException) {
-            parseException.printStackTrace();
-        }
+        JSONArray array = readFile("src/main/resources/requests.json");
+        System.out.println(array.toJSONString());
 
         if(array.isEmpty()){
             JOptionPane.showMessageDialog(frame, "No requests!" );
+            frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
             bfp.sellermenu();
         }
@@ -87,119 +73,132 @@ public class ViewRequests implements ActionListener{
 
         //Accept button
         acc = new JButton("Accept");
-        acc.setBounds(40, 40, 180, 280);
+        acc.setBounds(40, 40, 50, 30);
         acc.addActionListener(this);
         panel.add(acc);
 
-        //Reject Button
+        //Decline Button
         rej = new JButton("Decline");
-        rej.setBounds(100, 40, 180, 280);
+        rej.setBounds(100, 40, 50, 30);
         rej.addActionListener(this);
         panel.add(rej);
 
         frame.setVisible(true);
+
     }
-    JSONArray list;
-    private void UpdateTable(){
+
+    private JSONArray readFile(String filePath){
         JSONArray array = new JSONArray();
         JSONParser parser = new JSONParser();
         Object p;
-        list = new JSONArray();
-        org.json.JSONObject obje = new org.json.JSONObject();
-        int index = (Integer) table.getValueAt(table.getSelectedRow(),0);//Preluare index
-
-        if(table.getSelectedRow() >= 0) {//Daca linia este selectata
 
         //Copiere continut deja existent cu Parser
         try{
-            FileReader readFile = new FileReader("src/main/resources/requests.json");
+            FileReader readFile = new FileReader(filePath);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
             if(p instanceof JSONArray)
             {
-                list =(JSONArray)p;
+                array =(JSONArray)p;
             }
         } catch (ParseException | IOException ex) {
             ex.printStackTrace();
         }
-        obje.put("Brand", table.getValueAt(table.getSelectedRow(), 1).toString());
-        obje.put("Model", table.getValueAt(table.getSelectedRow(), 2).toString());
-        obje.put("Price", table.getValueAt(table.getSelectedRow(), 3).toString());
-        obje.put("Year", table.getValueAt(table.getSelectedRow(), 4).toString());
+        return array;
+
+    }
+
+    private void writeFile (JSONArray arr, String filepath){
+        //Rescriere elemente in fisier
+        try{
+            File file=new File(filepath);
+            FileWriter fw=new FileWriter(file.getAbsoluteFile());
+            fw.write(arr.toJSONString());
+            fw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void ActionButtons(){
+
+        JSONArray list = new JSONArray();
+        org.json.JSONObject obj = new org.json.JSONObject();
+        int index = (Integer) table.getValueAt(table.getSelectedRow(),0);//Preluare index
+
+        if(table.getSelectedRow() >= 0) {//Daca linia este selectata
+
+        list = readFile("src/main/resources/requests.json");
+
+        obj.put("Brand", table.getValueAt(table.getSelectedRow(), 1).toString());
+        obj.put("Model", table.getValueAt(table.getSelectedRow(), 2).toString());
+        obj.put("Price", table.getValueAt(table.getSelectedRow(), 3).toString());
+        obj.put("Year", table.getValueAt(table.getSelectedRow(), 4).toString());
 
         if(!acc.isSelected()){
 
-                //Copiere continut deja existent cu Parser
-                try{
-                    FileReader readFile = new FileReader("src/main/resources/cars.json");
-                    BufferedReader read = new BufferedReader(readFile);
-                    p = parser.parse(read);
-                    if(p instanceof JSONArray)
-                    {
-                        array =(JSONArray)p;
-                    }
-                } catch (ParseException | IOException ex) {
-                    ex.printStackTrace();
-                }
+            JSONArray array = readFile("src/main/resources/cars.json");
+                array.add(obj);
 
-                array.add(obje);
-
-                try{
-                    File file=new File("src/main/resources/cars.json");
-                    FileWriter fw=new FileWriter(file.getAbsoluteFile());
-                    fw.write(array.toJSONString());
-                    fw.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }}
+                writeFile(array,"src/main/resources/cars.json");
+        }
 
             //Stergere element selectat din fisier
             list.remove(index-1);
 
-            //Rescriere elemente in fisier
-            try{
-                File file=new File("src/main/resources/requests.json");
-                FileWriter fw=new FileWriter(file.getAbsoluteFile());
-                fw.write(list.toJSONString());
-                fw.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-          
-
+          writeFile(list, "src/main/resources/requests.json");
 
         }
         else {
             JOptionPane.showMessageDialog(acc, "You must select a requests");
-            frame.setVisible(false);
+        }
+
+
+
+    }
+    private void UpdateTable(){
+        DefaultTableModel mod =new DefaultTableModel();
+        mod.addColumn("Index");
+        mod.addColumn("Brand");
+        mod.addColumn("Model");
+        mod.addColumn("Year");
+        mod.addColumn("Price");
+        table.setModel(mod);
+
+        String[] data = new String[5];
+
+      JSONArray array = readFile("src/main/resources/requests.json");
+
+        int index=1;
+        //Transformare din JSONArray in String[] si adaugare in tabel
+        for (JSONObject obj : (Iterable<JSONObject>) array) {
+            data[1] = obj.get("Brand").toString();
+            data[2] = obj.get("Model").toString();
+            data[3] = obj.get("Year").toString();
+            data[4] = obj.get("Price").toString();
+            mod.addRow(new Object[]{index,data[1], data[2], data[3],data[4]});
+            index++;
+        }
+        if(table.getRowCount() == 0){ frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu();}
 
         }
 
-    }
+
 
     public void actionPerformed(ActionEvent e) {
 
         //Actiuni pentru butonul Decline
         if(e.getSource()==rej)
         {
+            ActionButtons();
             UpdateTable();
-            if(table == null){ frame.setVisible(false);
-                SellerMenu bfp = new SellerMenu();
-                bfp.sellermenu();}
-
-
         }
         if (e.getSource() == acc)
         {
+            ActionButtons();
             UpdateTable();
-            if(list.isEmpty())
-            { frame.setVisible(false);
-                SellerMenu bfp = new SellerMenu();
-                bfp.sellermenu();}
-            list.clear();
-
         }
 
 
