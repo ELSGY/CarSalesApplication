@@ -11,8 +11,8 @@ public class Main{
 
        // Application ap=new Application();
        // ap.start();
-        ViewRequests req = new ViewRequests();
-        req.GUIReq();
+       SellerMenu sel = new SellerMenu();
+       sel.sellermenu();
 
     }
 }

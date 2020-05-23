@@ -19,8 +19,8 @@ public class ViewRequests implements ActionListener{
     private JFrame frame;
     private JButton rej;
     private JButton acc;
-    DefaultTableModel model;
-    public void GUIReq(){
+    private JButton back;
+    public void GUIReq() {
         JPanel panel = new JPanel();
         frame = new JFrame("View Requests");
         frame.setSize(450, 320);
@@ -30,39 +30,38 @@ public class ViewRequests implements ActionListener{
 
         panel.setBackground(Color.lightGray);
 
-        //Tabel cereri
+        //Tabel requests
         String[] data = new String[5];
-        model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Index");
         model.addColumn("Brand");
         model.addColumn("Model");
         model.addColumn("Year");
         model.addColumn("Price");
-        table=new JTable(model);
+        table = new JTable(model);
 
-
+        //Citire din fisier
         JSONArray array = readFile("src/main/resources/requests.json");
-        System.out.println(array.toJSONString());
 
-        if(array.isEmpty()){
-            JOptionPane.showMessageDialog(frame, "No requests!" );
-            frame.setVisible(false);
+        if (array.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No requests!");
             SellerMenu bfp = new SellerMenu();
             bfp.sellermenu();
-        }
-        else {
 
-            int index=1;
+        } else {
+
+            int index = 1;
             //Transformare din JSONArray in String[] si adaugare in tabel
             for (JSONObject obj : (Iterable<JSONObject>) array) {
                 data[1] = obj.get("Brand").toString();
                 data[2] = obj.get("Model").toString();
                 data[3] = obj.get("Year").toString();
                 data[4] = obj.get("Price").toString();
-                model.addRow(new Object[]{index,data[1], data[2], data[3],data[4]});
+                model.addRow(new Object[]{index, data[1], data[2], data[3], data[4]});
                 index++;
 
-            }}
+            }
+        }
 
         //Setari tabel
         table.setPreferredScrollableViewportSize(new Dimension(380, 200));
@@ -73,17 +72,28 @@ public class ViewRequests implements ActionListener{
 
         //Accept button
         acc = new JButton("Accept");
-        acc.setBounds(40, 40, 50, 30);
+        acc.setBounds(300, 620, 80, 25);
         acc.addActionListener(this);
         panel.add(acc);
 
         //Decline Button
         rej = new JButton("Decline");
-        rej.setBounds(100, 40, 50, 30);
+        rej.setBounds(360, 620, 80, 25);
         rej.addActionListener(this);
         panel.add(rej);
 
+        //Back button
+        back = new JButton("Back");
+        back.setBounds(420, 620, 80, 25);
+        back.addActionListener(this);
+        panel.add(back);
+
+       if(array.isEmpty()){
+            frame.setVisible(false);
+        }
+        else {
         frame.setVisible(true);
+         }
 
     }
 
@@ -108,8 +118,7 @@ public class ViewRequests implements ActionListener{
 
     }
 
-    private void writeFile (JSONArray arr, String filepath){
-        //Rescriere elemente in fisier
+    private void writeFile (JSONArray arr, String filepath){ //Scriere elemente in fisier
         try{
             File file=new File(filepath);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
@@ -120,42 +129,42 @@ public class ViewRequests implements ActionListener{
         }
     }
 
+    JSONArray list;
     private void ActionButtons(){
-
-        JSONArray list = new JSONArray();
         org.json.JSONObject obj = new org.json.JSONObject();
-        int index = (Integer) table.getValueAt(table.getSelectedRow(),0);//Preluare index
 
-        if(table.getSelectedRow() >= 0) {//Daca linia este selectata
+        try {
+            int position = table.getSelectedRow();
+            int index = (Integer) table.getValueAt(position,0);
 
-        list = readFile("src/main/resources/requests.json");
+            if(position >= 0) {
+                //Daca linia este selectata
+                list = readFile("src/main/resources/requests.json");
 
-        obj.put("Brand", table.getValueAt(table.getSelectedRow(), 1).toString());
-        obj.put("Model", table.getValueAt(table.getSelectedRow(), 2).toString());
-        obj.put("Price", table.getValueAt(table.getSelectedRow(), 3).toString());
-        obj.put("Year", table.getValueAt(table.getSelectedRow(), 4).toString());
+                if (acc.isEnabled()) {
+                    obj.put("Brand", table.getValueAt(position, 1).toString());
+                    obj.put("Model", table.getValueAt(position, 2).toString());
+                    obj.put("Year", table.getValueAt(position, 3).toString());
+                    obj.put("Price", table.getValueAt(position, 4).toString());
 
-        if(!acc.isSelected()){
+                    JSONArray array = readFile("src/main/resources/cars.json");
+                    array.add(obj);
+                    writeFile(array, "src/main/resources/cars.json");
+                }
 
-            JSONArray array = readFile("src/main/resources/cars.json");
-                array.add(obj);
+                list.remove(index - 1); // Stergere element selectat din fisier
+                writeFile(list, "src/main/resources/requests.json");
+                if(!list.isEmpty())
+                {
+                    list.clear();
+                }
 
-                writeFile(array,"src/main/resources/cars.json");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog( frame,"You must select a request.");
         }
-
-            //Stergere element selectat din fisier
-            list.remove(index-1);
-
-          writeFile(list, "src/main/resources/requests.json");
-
-        }
-        else {
-            JOptionPane.showMessageDialog(acc, "You must select a requests");
-        }
-
-
-
     }
+
     private void UpdateTable(){
         DefaultTableModel mod =new DefaultTableModel();
         mod.addColumn("Index");
@@ -166,12 +175,11 @@ public class ViewRequests implements ActionListener{
         table.setModel(mod);
 
         String[] data = new String[5];
-
-      JSONArray array = readFile("src/main/resources/requests.json");
+        JSONArray array = readFile("src/main/resources/requests.json");
 
         int index=1;
-        //Transformare din JSONArray in String[] si adaugare in tabel
-        for (JSONObject obj : (Iterable<JSONObject>) array) {
+
+        for (JSONObject obj : (Iterable<JSONObject>) array) { //Transformare din JSONArray in String[] si adaugare in tabel
             data[1] = obj.get("Brand").toString();
             data[2] = obj.get("Model").toString();
             data[3] = obj.get("Year").toString();
@@ -179,26 +187,37 @@ public class ViewRequests implements ActionListener{
             mod.addRow(new Object[]{index,data[1], data[2], data[3],data[4]});
             index++;
         }
-        if(table.getRowCount() == 0){ frame.setVisible(false);
+        if(table.getRowCount() == 0) {
+            frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();}
-
+            bfp.sellermenu();
         }
 
-
+    }
 
     public void actionPerformed(ActionEvent e) {
 
         //Actiuni pentru butonul Decline
         if(e.getSource()==rej)
         {
+           acc.setEnabled(false);
             ActionButtons();
             UpdateTable();
+            acc.setEnabled(true);
+
+
         }
         if (e.getSource() == acc)
         {
+            acc.setEnabled(true);
             ActionButtons();
             UpdateTable();
+        }
+        if(e.getSource() == back)
+        {
+            frame.setVisible(false);
+            SellerMenu sel = new SellerMenu();
+            sel.sellermenu();
         }
 
 
