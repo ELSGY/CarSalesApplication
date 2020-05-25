@@ -52,6 +52,7 @@ public class SellerMenu implements ActionListener{
 
         vreq= new JButton("View Requests");
         vreq.setBounds(40,170,125,25);
+        vreq.addActionListener(this);
         panel.add(vreq);
 
         logout= new JButton("Log out");
@@ -76,7 +77,9 @@ public class SellerMenu implements ActionListener{
 
         //Actiuni pentru butonul View reguests
         if(e.getSource()==vreq){
-
+            frame.setVisible(false);
+            ViewRequests req = new ViewRequests();
+            req.GUIReq();
         }
 
         //Actiuni pentru butonul Edit Car

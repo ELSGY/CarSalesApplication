@@ -14,11 +14,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.Iterator;
-import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 
 public class EditCars implements ActionListener {
