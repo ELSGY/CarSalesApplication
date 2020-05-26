@@ -1,23 +1,10 @@
-import menu.ClientMenu;
+
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import services.*;
-import menu.SellerMenu;
+
 
 import java.io.*;
 
-
-import org.testng.annotations.Test;
 import pages.FirstPage;
-
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static java.nio.file.Files.newDirectoryStream;
-import static org.apache.commons.io.IOUtils.*;
-
 
 public class Main{
 
@@ -43,15 +30,10 @@ public class Main{
         catch (IOException ex) {
             ex.printStackTrace();
         }
-       // FirstPage first=new FirstPage();
-       // first.startProgram();
+        FirstPage first=new FirstPage();
+        first.startProgram();
 
-       // Application ap=new Application();
-       // ap.start();
-      SellerMenu sel = new SellerMenu();
-       sel.sellermenu();
-        //ClientMenu cln = new ClientMenu();
-       // cln.menu();
+
 
     }
 }
