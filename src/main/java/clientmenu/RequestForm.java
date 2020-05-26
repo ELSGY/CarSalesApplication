@@ -132,6 +132,9 @@ public class RequestForm implements ActionListener {
         {
             sendbutton();
             JOptionPane.showMessageDialog(frame, "Request sent!" );
+            frame.setVisible(false);
+            Application ap=new Application();
+            ap.start();
         }
 
         //Actiuni pentru butonul Back
