@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import pages.FirstPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -134,6 +133,9 @@ public class AddCar implements ActionListener {
         {
             addcar();
             JOptionPane.showMessageDialog(frame, "Car Added");
+            frame.setVisible(false);
+            SellerMenu bfp = new SellerMenu();
+            bfp.sellermenu();
         }
 
         //Actiuni pentru butonul Back
