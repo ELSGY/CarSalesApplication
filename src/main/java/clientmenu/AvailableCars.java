@@ -2,6 +2,7 @@ package clientmenu;
 
 import menu.SellerMenu;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -41,7 +42,21 @@ public class AvailableCars implements ActionListener {
 
         JSONArray array = readFile("src/main/resources/cars.json");
 
-        System.out.println(array.toJSONString());
+        //Transformare din JSONArray in String[] si adaugare in tabel
+       for(JSONObject obj : (Iterable<JSONObject>)array){
+           cars[0] = obj.get("Brand").toString();
+           cars[1] = obj.get("Model").toString();
+           cars[2] = obj.get("Year").toString();
+           cars[3] = obj.get("Price").toString();
+           model.addRow(new Object[]{cars[0], cars[1], cars[2], cars[3]});
+       }
+
+        //Setari tabel
+        table.setPreferredScrollableViewportSize(new Dimension(380, 200));
+        table.setFillsViewportHeight(true);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(10, 10, 250, 240);
+        panel.add(scrollPane);
 
         //Back Button
         back = new JButton("Back");
