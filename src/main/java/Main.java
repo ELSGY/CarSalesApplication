@@ -48,10 +48,10 @@ public class Main{
 
        // Application ap=new Application();
        // ap.start();
-      // SellerMenu sel = new SellerMenu();
-      /// sel.sellermenu();
-        ClientMenu cln = new ClientMenu();
-        cln.menu();
+      SellerMenu sel = new SellerMenu();
+       sel.sellermenu();
+        //ClientMenu cln = new ClientMenu();
+       // cln.menu();
 
     }
 }

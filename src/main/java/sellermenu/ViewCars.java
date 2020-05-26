@@ -93,7 +93,12 @@ public class ViewCars implements ActionListener {
             back.addActionListener(this);
             panel.add(back);
 
+            if(!array.isEmpty()){
             frame.setVisible(true);
+            }
+            else{
+                frame.setVisible(false);
+            }
         }
 
     }
