@@ -104,8 +104,8 @@ public class AvailableCars implements ActionListener {
         if(e.getSource()==back)
         {
             frame.setVisible(false);
-            SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            ClientMenu client = new ClientMenu();
+            client.menu();
         }
     }
 }
