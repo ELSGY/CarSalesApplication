@@ -1,5 +1,6 @@
 package clientmenu;
 
+import menu.ClientMenu;
 import menu.SellerMenu;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -42,13 +43,21 @@ public class AvailableCars implements ActionListener {
 
         JSONArray array = readFile("src/main/resources/cars.json");
 
+        if(array.isEmpty()){
+            JOptionPane.showMessageDialog(frame, "Empty list!" );
+            ClientMenu client = new ClientMenu();
+            client.menu();
+        }
+        else{
+
         //Transformare din JSONArray in String[] si adaugare in tabel
-       for(JSONObject obj : (Iterable<JSONObject>)array){
+       for(JSONObject obj : (Iterable<JSONObject>)array) {
            cars[0] = obj.get("Brand").toString();
            cars[1] = obj.get("Model").toString();
            cars[2] = obj.get("Year").toString();
            cars[3] = obj.get("Price").toString();
            model.addRow(new Object[]{cars[0], cars[1], cars[2], cars[3]});
+         }
        }
 
         //Setari tabel
@@ -64,7 +73,12 @@ public class AvailableCars implements ActionListener {
         back.addActionListener(this);
         panel.add(back);
 
-        frame.setVisible(true);
+        if(array.isEmpty()){
+            frame.setVisible(false);
+        }else{
+            frame.setVisible(true);
+        }
+
     }
 
     private JSONArray readFile(String file){
