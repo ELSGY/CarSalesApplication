@@ -1,6 +1,7 @@
 package menu;
 
 import clientmenu.Application;
+import clientmenu.AvailableCars;
 import pages.FirstPage;
 
 import javax.swing.*;
@@ -37,6 +38,7 @@ public class ClientMenu implements ActionListener {
         //Options
         vcars= new JButton("Available cars");
         vcars.setBounds(40,50,150,25);
+        vcars.addActionListener(this);
         panel.add(vcars);
 
         fapp= new JButton("Fill the application");
@@ -67,6 +69,12 @@ public class ClientMenu implements ActionListener {
             Application ap=new Application();
             ap.start();
 
+        }
+
+        if(e.getSource() == vcars){
+            frame.setVisible(false);
+            AvailableCars avc = new AvailableCars();
+            avc.GUIAv();
         }
 
     }

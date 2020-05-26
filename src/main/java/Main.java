@@ -1,3 +1,4 @@
+import menu.ClientMenu;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import services.*;
@@ -42,13 +43,15 @@ public class Main{
         catch (IOException ex) {
             ex.printStackTrace();
         }
-        FirstPage first=new FirstPage();
-        first.startProgram();
+       // FirstPage first=new FirstPage();
+       // first.startProgram();
 
        // Application ap=new Application();
        // ap.start();
-       //SellerMenu sel = new SellerMenu();
-      // sel.sellermenu();
+      // SellerMenu sel = new SellerMenu();
+      /// sel.sellermenu();
+        ClientMenu cln = new ClientMenu();
+        cln.menu();
 
     }
 }
