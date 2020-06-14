@@ -15,9 +15,10 @@ import org.json.simple.parser.*;
 
 public class Register implements ActionListener {
 
+    protected JTextField username;
    private JButton back,register;
    private JFrame frame;
-   private JTextField username,password,name,email,age;
+   private JTextField password,name,email,age;
    private JComboBox function;
 
     public void menu() {
@@ -153,7 +154,7 @@ public class Register implements ActionListener {
         else {
             SellerMenu seller;
             seller = new SellerMenu();
-            seller.sellermenu();
+            seller.sellermenu(username.getText());
         }
 
     }

@@ -25,7 +25,7 @@ public class Main{
             copyFile(from_car, to);
             copyFile(from_req, to);
 
-            System.out.println("File copied successfully.");
+            //System.out.println("File copied successfully.");
         }
         catch (IOException ex) {
             ex.printStackTrace();

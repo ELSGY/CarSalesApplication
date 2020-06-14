@@ -1,6 +1,6 @@
 package clientmenu;
 
-import menu.ClientMenu;
+import menu.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -1,6 +1,6 @@
 package sellermenu;
 
-import menu.SellerMenu;
+import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,12 +17,14 @@ import java.io.*;
 
 
 public class EditCars implements ActionListener {
+    protected String username;
     private JFrame frame;
     private JButton back;
     private JTable table;
     private JButton edit;
 
-    public void GUIEdit() {
+    public void GUIEdit(String username) {
+        this.username=username;
 
         JPanel panel = new JPanel();
         frame = new JFrame("Edit Car");
@@ -61,7 +63,7 @@ public class EditCars implements ActionListener {
         if(array.isEmpty()){
             JOptionPane.showMessageDialog(frame, "There is no car to edit!" );
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
         }
         else {
 
@@ -202,7 +204,7 @@ public class EditCars implements ActionListener {
         {
             frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
         }
         if(e.getSource() == edit){
             EdButton();

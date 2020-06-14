@@ -17,7 +17,8 @@ import java.util.Iterator;
 
 public class FirstPage implements ActionListener {
 
-    private JTextField username,password;
+    protected JTextField username;
+    private JTextField password;
     private JButton login,reg,clear;
     private JCheckBox checkseller,checkclient;
 
@@ -155,7 +156,7 @@ public class FirstPage implements ActionListener {
                     if (checkseller.isSelected()) {
                         SellerMenu seller;
                         seller = new SellerMenu();
-                        seller.sellermenu();
+                        seller.sellermenu(username.getText());
                         break;
                     }
                 }

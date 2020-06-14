@@ -11,12 +11,15 @@ import java.awt.event.ActionListener;
 
 public class SellerMenu implements ActionListener{
 
+    protected String username;
     private JPanel panel;
     private JFrame frame;
     private JLabel title;
     private JButton acar,vcars,ecar,vreq,logout;
 
-    public void sellermenu(){
+    public void sellermenu(String username){
+
+        this.username=username;
 
         panel = new JPanel();
         frame = new JFrame("Seller");
@@ -79,21 +82,21 @@ public class SellerMenu implements ActionListener{
         if(e.getSource()==vreq){
             frame.setVisible(false);
             ViewRequests req = new ViewRequests();
-            req.GUIReq();
+            req.GUIReq(username);
         }
 
         //Actiuni pentru butonul Edit Car
         if(e.getSource()==ecar){
             frame.setVisible(false);
             EditCars eCars = new EditCars();
-            eCars.GUIEdit();
+            eCars.GUIEdit(username);
         }
 
         //Actiuni pentru butonul Add Car
         if(e.getSource()==acar){
             frame.setVisible(false);
             AddCar a = new AddCar();
-            a.GUICar();
+            a.GUICar(username);
         }
 
         //Actiuni pentru butonul View Cars
@@ -101,7 +104,7 @@ public class SellerMenu implements ActionListener{
 
             frame.setVisible(false);
             ViewCars viewCars=new ViewCars();
-            viewCars.GUIView();
+            viewCars.GUIView(username);
         }
     }
 }

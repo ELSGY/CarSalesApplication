@@ -1,6 +1,6 @@
 package sellermenu;
 
-import menu.SellerMenu;
+import menu.*;
 import org.json.JSONString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,10 +21,12 @@ import java.util.Iterator;
 
 
 public class ViewCars implements ActionListener {
+    protected String username;
     private JFrame frame;
     private JButton back;
 
-    public void GUIView() {
+    public void GUIView(String username) {
+        this.username=username;
         JPanel panel = new JPanel();
         frame = new JFrame("My cars");
         frame.setSize(450, 320);
@@ -64,7 +66,7 @@ public class ViewCars implements ActionListener {
         if(array.isEmpty()){
             JOptionPane.showMessageDialog(frame, "Empty list!" );
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
         }
         else {
 
@@ -112,7 +114,7 @@ public class ViewCars implements ActionListener {
         {
             frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
         }
 
     }

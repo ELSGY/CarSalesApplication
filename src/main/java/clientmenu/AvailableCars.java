@@ -1,7 +1,6 @@
 package clientmenu;
 
-import menu.ClientMenu;
-import menu.SellerMenu;
+import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
