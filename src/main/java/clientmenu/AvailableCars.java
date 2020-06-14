@@ -30,9 +30,10 @@ public class AvailableCars implements ActionListener {
         panel.setBackground(Color.lightGray);
 
         //tabel cu masini
-        String[] cars = new String[4];
+        String[] cars = new String[5];
 
         DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Owner");
         model.addColumn("Brand");
         model.addColumn("Model");
         model.addColumn("Year");
@@ -51,11 +52,12 @@ public class AvailableCars implements ActionListener {
 
         //Transformare din JSONArray in String[] si adaugare in tabel
        for(JSONObject obj : (Iterable<JSONObject>)array) {
-           cars[0] = obj.get("Brand").toString();
-           cars[1] = obj.get("Model").toString();
-           cars[2] = obj.get("Year").toString();
-           cars[3] = obj.get("Price").toString();
-           model.addRow(new Object[]{cars[0], cars[1], cars[2], cars[3]});
+           cars[0] = obj.get("Username").toString();
+           cars[1] = obj.get("Brand").toString();
+           cars[2] = obj.get("Model").toString();
+           cars[3] = obj.get("Year").toString();
+           cars[4] = obj.get("Price").toString();
+           model.addRow(new Object[]{cars[0], cars[1], cars[2], cars[3],cars[4]});
          }
        }
 

@@ -73,13 +73,14 @@ public class ViewCars implements ActionListener {
             int index=1;
             //Transformare din JSONArray in String[] si adaugare in tabel
             for (JSONObject obj : (Iterable<JSONObject>) array) {
-                data[1] = obj.get("Brand").toString();
-                data[2] = obj.get("Model").toString();
-                data[3] = obj.get("Year").toString();
-                data[4] = obj.get("Price").toString();
-                model.addRow(new Object[]{index,data[1], data[2], data[3],data[4]});
-                index++;
-
+                if((obj.get("Username").toString()).equals(username)) {
+                    data[1] = obj.get("Brand").toString();
+                    data[2] = obj.get("Model").toString();
+                    data[3] = obj.get("Year").toString();
+                    data[4] = obj.get("Price").toString();
+                    model.addRow(new Object[]{index, data[1], data[2], data[3], data[4]});
+                    index++;
+                }
             }
 
             //Setari tabel

@@ -39,6 +39,7 @@ public class SearchForm implements ActionListener {
 
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Index");
+        model.addColumn("Owner");
         model.addColumn("Brand");
         model.addColumn("Model");
         model.addColumn("Year");
@@ -64,17 +65,18 @@ public class SearchForm implements ActionListener {
 
             int index = 1, ok = 0;
             //Verificare masina cautata
-            String[] data = new String[5];
+            String[] data = new String[6];
             for (JSONObject obj : (Iterable<JSONObject>) array) {
 
                 String obkBrand = obj.get("Brand").toString();
                 String obkYear = obj.get("Year").toString();
                 if ((obkBrand.toLowerCase().equals(brand) && !brand.isEmpty() && obkYear.equals(year) && !year.isEmpty()) || (obkBrand.toLowerCase().equals(brand) && !brand.isEmpty() && year.isEmpty()) || (brand.isEmpty() && obkYear.equals(year) && !year.isEmpty())) {
-                    data[1] = obj.get("Brand").toString();
-                    data[2] = obj.get("Model").toString();
-                    data[3] = obj.get("Year").toString();
-                    data[4] = obj.get("Price").toString();
-                    model.addRow(new Object[]{index, data[1], data[2], data[3], data[4]});
+                    data[1]=obj.get("Username").toString();
+                    data[2] = obj.get("Brand").toString();
+                    data[3] = obj.get("Model").toString();
+                    data[4] = obj.get("Year").toString();
+                    data[5] = obj.get("Price").toString();
+                    model.addRow(new Object[]{index, data[1], data[2], data[3], data[4],data[5]});
                     index++;
                     ok = 1;
                 }

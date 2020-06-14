@@ -207,7 +207,6 @@ public class ViewRequests implements ActionListener{
             UpdateTable();
             acc.setEnabled(true);
 
-
         }
         if (e.getSource() == acc)
         {
