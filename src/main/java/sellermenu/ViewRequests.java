@@ -1,6 +1,6 @@
 package sellermenu;
 
-import menu.SellerMenu;
+import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,12 +15,14 @@ import java.io.*;
 
 
 public class ViewRequests implements ActionListener{
+    protected String username;
     private JTable table;
     private JFrame frame;
     private JButton rej;
     private JButton acc;
     private JButton back;
-    public void GUIReq() {
+    public void GUIReq(String username) {
+        this.username=username;
         JPanel panel = new JPanel();
         frame = new JFrame("View Requests");
         frame.setSize(450, 320);
@@ -46,7 +48,7 @@ public class ViewRequests implements ActionListener{
         if (array.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No requests!");
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
 
         } else {
 
@@ -190,7 +192,7 @@ public class ViewRequests implements ActionListener{
         if(table.getRowCount() == 0) {
             frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
         }
 
     }
@@ -205,7 +207,6 @@ public class ViewRequests implements ActionListener{
             UpdateTable();
             acc.setEnabled(true);
 
-
         }
         if (e.getSource() == acc)
         {
@@ -217,7 +218,7 @@ public class ViewRequests implements ActionListener{
         {
             frame.setVisible(false);
             SellerMenu sel = new SellerMenu();
-            sel.sellermenu();
+            sel.sellermenu(username);
         }
 
 

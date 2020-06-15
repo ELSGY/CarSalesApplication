@@ -1,22 +1,10 @@
+
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import services.*;
-import menu.SellerMenu;
+
 
 import java.io.*;
 
-
-import org.testng.annotations.Test;
 import pages.FirstPage;
-
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static java.nio.file.Files.newDirectoryStream;
-import static org.apache.commons.io.IOUtils.*;
-
 
 public class Main{
 
@@ -37,7 +25,7 @@ public class Main{
             copyFile(from_car, to);
             copyFile(from_req, to);
 
-            System.out.println("File copied successfully.");
+            //System.out.println("File copied successfully.");
         }
         catch (IOException ex) {
             ex.printStackTrace();
@@ -45,10 +33,7 @@ public class Main{
         FirstPage first=new FirstPage();
         first.startProgram();
 
-       // Application ap=new Application();
-       // ap.start();
-       //SellerMenu sel = new SellerMenu();
-      // sel.sellermenu();
+
 
     }
 }

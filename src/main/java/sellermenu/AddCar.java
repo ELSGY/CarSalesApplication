@@ -1,11 +1,10 @@
 package sellermenu;
 
-import menu.SellerMenu;
+import menu.*;
 import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import pages.FirstPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,8 +16,10 @@ public class AddCar implements ActionListener {
     private JFrame frame;
     private JTextField year,brand,model,price;
     private JButton back,addcar;
+    protected String username;
 
-    public void GUICar(){
+    public void GUICar(String username){
+        this.username=username;
         JPanel panel = new JPanel();
         frame = new JFrame("Add Car");
         frame.setSize(450, 350);
@@ -87,7 +88,7 @@ public class AddCar implements ActionListener {
 
     }
 
-    public void addcar(){
+    public void addcar(String username){
 
         JSONObject obj = new JSONObject();
         Object p;
@@ -108,6 +109,7 @@ public class AddCar implements ActionListener {
         }
 
         //Adaugare continut nou
+        obj.put("Username",username);
         obj.put("Brand",brand.getText());
         obj.put("Model",model.getText());
         obj.put("Year",year.getText());
@@ -132,8 +134,11 @@ public class AddCar implements ActionListener {
 
         if(e.getSource()==addcar)
         {
-            addcar();
+            addcar(username);
             JOptionPane.showMessageDialog(frame, "Car Added");
+            frame.setVisible(false);
+            SellerMenu bfp = new SellerMenu();
+            bfp.sellermenu(username);
         }
 
         //Actiuni pentru butonul Back
@@ -141,7 +146,7 @@ public class AddCar implements ActionListener {
         {
             frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
         }
 
     }

@@ -1,6 +1,6 @@
 package sellermenu;
 
-import menu.SellerMenu;
+import menu.*;
 import org.json.JSONString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,10 +21,12 @@ import java.util.Iterator;
 
 
 public class ViewCars implements ActionListener {
+    protected String username;
     private JFrame frame;
     private JButton back;
 
-    public void GUIView() {
+    public void GUIView(String username) {
+        this.username=username;
         JPanel panel = new JPanel();
         frame = new JFrame("My cars");
         frame.setSize(450, 320);
@@ -64,20 +66,21 @@ public class ViewCars implements ActionListener {
         if(array.isEmpty()){
             JOptionPane.showMessageDialog(frame, "Empty list!" );
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
         }
         else {
 
             int index=1;
             //Transformare din JSONArray in String[] si adaugare in tabel
             for (JSONObject obj : (Iterable<JSONObject>) array) {
-                data[1] = obj.get("Brand").toString();
-                data[2] = obj.get("Model").toString();
-                data[3] = obj.get("Year").toString();
-                data[4] = obj.get("Price").toString();
-                model.addRow(new Object[]{index,data[1], data[2], data[3],data[4]});
-                index++;
-
+                if((obj.get("Username").toString()).equals(username)) {
+                    data[1] = obj.get("Brand").toString();
+                    data[2] = obj.get("Model").toString();
+                    data[3] = obj.get("Year").toString();
+                    data[4] = obj.get("Price").toString();
+                    model.addRow(new Object[]{index, data[1], data[2], data[3], data[4]});
+                    index++;
+                }
             }
 
             //Setari tabel
@@ -93,7 +96,12 @@ public class ViewCars implements ActionListener {
             back.addActionListener(this);
             panel.add(back);
 
+            if(!array.isEmpty()){
             frame.setVisible(true);
+            }
+            else{
+                frame.setVisible(false);
+            }
         }
 
     }
@@ -107,7 +115,7 @@ public class ViewCars implements ActionListener {
         {
             frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu();
+            bfp.sellermenu(username);
         }
 
     }
