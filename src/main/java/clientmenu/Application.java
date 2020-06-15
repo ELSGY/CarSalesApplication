@@ -54,9 +54,16 @@ public class Application implements ActionListener {
             String brand = JOptionPane.showInputDialog("Brand");
             String year = JOptionPane.showInputDialog("Year");
 
-            SearchForm search = new SearchForm();
-            search.search(brand.toLowerCase(), year.toLowerCase());
-
+            if(!brand.isEmpty()&&year.isEmpty()||brand.isEmpty()&&!year.isEmpty()||!brand.isEmpty()&&!year.isEmpty()) {
+                SearchForm search = new SearchForm();
+                search.search(brand.toLowerCase(), year.toLowerCase());
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(frame, "No data was introduced" );
+                Application ap = new Application();
+                ap.start();
+            }
     }
     public void actionPerformed(ActionEvent e) {
 

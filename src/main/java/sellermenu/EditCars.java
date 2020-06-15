@@ -5,9 +5,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -37,7 +34,7 @@ public class EditCars implements ActionListener {
 
 
         DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Index");
+        model.addColumn("Nr.");
         model.addColumn("Brand");
         model.addColumn("Model");
         model.addColumn("Year");
@@ -117,12 +114,6 @@ public class EditCars implements ActionListener {
             String model = JOptionPane.showInputDialog("Model");
             String year = JOptionPane.showInputDialog("Year");
             String price = JOptionPane.showInputDialog("Price");
-            org.json.JSONObject original = new org.json.JSONObject();
-            original.put("Username",username);
-            original.put("Brand",brand);
-            original.put("Model",model);
-            original.put("Year",year);
-            original.put("Price",price);
 
             //Edit button
             if(brand.isEmpty()) {
@@ -166,6 +157,7 @@ public class EditCars implements ActionListener {
                 object.put("Price", price);
             }
             object.put("Username",username);
+
             //Copiere continut deja existent cu Parser
             try{
                 FileReader readFile = new FileReader("src/main/resources/cars.json");
@@ -178,9 +170,17 @@ public class EditCars implements ActionListener {
             } catch (ParseException | IOException ex) {
                 ex.printStackTrace();
             }
+            System.out.println(price);
 
-            //Stergere element selectat din fisier
-            list.remove(original);
+            //Stergere element "vechi editat"
+            for (int i=0;i<list.size();i++) {
+                JSONObject obj=(JSONObject) list.get(i);
+                if(obj.get("Username").toString().equals(username)&&obj.get("Price").toString().equals(table.getValueAt(index - 1, 4)))
+                {
+                    int org=list.indexOf(obj);
+                    list.remove(org);
+                }
+            }
 
             //Adaugare element nou
             list.add(object);
@@ -213,8 +213,5 @@ public class EditCars implements ActionListener {
         if(e.getSource() == edit){
             EdButton();
         }
-
     }
-
-
 }
