@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 public class Application implements ActionListener {
 
     private JFrame frame;
@@ -68,7 +67,6 @@ public class Application implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         //Actiuni
-
         if(e.getSource()==bck){
             frame.setVisible(false);
             ClientMenu cl=new ClientMenu();

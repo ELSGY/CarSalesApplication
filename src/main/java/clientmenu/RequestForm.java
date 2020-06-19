@@ -1,4 +1,5 @@
 package clientmenu;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +16,6 @@ public class RequestForm implements ActionListener {
     private JButton back,send;
     private JFrame frame;
     private JTextField brand,model,year,price;
-
 
     public void start() {
         JPanel panel = new JPanel();

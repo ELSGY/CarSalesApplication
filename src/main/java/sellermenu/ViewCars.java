@@ -6,19 +6,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 
 public class ViewCars implements ActionListener {
     protected String username;
@@ -45,7 +40,6 @@ public class ViewCars implements ActionListener {
         model.addColumn("Year");
         model.addColumn("Price");
         JTable table=new JTable(model);
-
 
         //Parcurgere fisier cars.json pentru preluare detalii masini
         JSONParser parser = new JSONParser();
@@ -106,7 +100,6 @@ public class ViewCars implements ActionListener {
 
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -117,6 +110,5 @@ public class ViewCars implements ActionListener {
             SellerMenu bfp = new SellerMenu();
             bfp.sellermenu(username);
         }
-
     }
 }

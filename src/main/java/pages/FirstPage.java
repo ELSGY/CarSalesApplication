@@ -4,7 +4,6 @@ import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,14 +13,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 
-
 public class FirstPage implements ActionListener {
 
     protected JTextField username;
     private JTextField password;
     private JButton login,reg,clear;
     private JCheckBox checkseller,checkclient;
-
     private JFrame frame;
 
     public void startProgram (){
@@ -37,7 +34,6 @@ public class FirstPage implements ActionListener {
         frame.add(panel);
         panel.setLayout(null);
         panel.setBackground(Color.lightGray);
-
 
         //pages.FirstPage title
         title = new JLabel("Login");
@@ -92,7 +88,7 @@ public class FirstPage implements ActionListener {
         frame.setVisible(true);
     }
 
-    private void loginbutton(){
+    public void loginbutton(){
 
         boolean ok = false;
 
@@ -101,7 +97,6 @@ public class FirstPage implements ActionListener {
         String function;
 
         //Citire date din fisier .json
-
         JSONParser parser = new JSONParser();
         JSONObject compare = new JSONObject();
         Object p;
@@ -166,10 +161,10 @@ public class FirstPage implements ActionListener {
                 JOptionPane.showMessageDialog(frame, "Invalid");
             }
 
-
         }
     }
-    public void actionPerformed(ActionEvent e) {
+
+    public void actionPerformed(ActionEvent e){
          Register register;
 
     //Actiuni pentru butonul Log In
@@ -177,7 +172,6 @@ public class FirstPage implements ActionListener {
             loginbutton();
 
         }
-
 
     //Actiuni pentru butonul Create an account
     if(e.getSource()==reg){
@@ -195,7 +189,5 @@ public class FirstPage implements ActionListener {
     }
 
     }
-
-
 
 }

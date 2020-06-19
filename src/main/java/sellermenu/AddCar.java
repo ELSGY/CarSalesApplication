@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +13,7 @@ import java.io.*;
 
 public class AddCar implements ActionListener {
     private JFrame frame;
-    private JTextField year,brand,model,price;
+    public JTextField year,brand,model,price;
     private JButton back,addcar;
     protected String username;
 
@@ -84,7 +83,6 @@ public class AddCar implements ActionListener {
         panel.add(back);
 
         frame.setVisible(true);
-
 
     }
 

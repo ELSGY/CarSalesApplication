@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 
-
 public class EditCars implements ActionListener {
     protected String username;
     private JFrame frame;
@@ -31,7 +30,6 @@ public class EditCars implements ActionListener {
         panel.setLayout(new FlowLayout());
 
         panel.setBackground(Color.lightGray);
-
 
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Nr.");
@@ -210,7 +208,9 @@ public class EditCars implements ActionListener {
             SellerMenu bfp = new SellerMenu();
             bfp.sellermenu(username);
         }
-        if(e.getSource() == edit){
+
+        if(e.getSource() == edit)
+        {
             EdButton();
         }
     }

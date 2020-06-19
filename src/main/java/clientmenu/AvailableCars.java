@@ -5,7 +5,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -19,6 +18,7 @@ public class AvailableCars implements ActionListener {
 
     private JFrame frame;
     private JButton back;
+
     public void GUIAv(){
         JPanel panel = new JPanel();
         frame = new JFrame("Available");

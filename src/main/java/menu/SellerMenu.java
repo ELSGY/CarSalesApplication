@@ -12,16 +12,14 @@ import java.awt.event.ActionListener;
 public class SellerMenu implements ActionListener{
 
     protected String username;
-    private JPanel panel;
     private JFrame frame;
-    private JLabel title;
     private JButton acar,vcars,ecar,vreq,logout;
 
     public void sellermenu(String username){
 
         this.username=username;
 
-        panel = new JPanel();
+        JPanel panel = new JPanel();
         frame = new JFrame("Seller");
 
         frame.setSize(350, 300);
@@ -32,7 +30,7 @@ public class SellerMenu implements ActionListener{
         panel.setBackground(Color.LIGHT_GRAY);
 
         //Seller Menu
-        title = new JLabel("Menu");
+        JLabel title = new JLabel("Menu");
         title.setBounds(130,10,80,25);
         title.setFont(new Font(title.getFont().getName(), Font.BOLD, 18));
         panel.add(title);

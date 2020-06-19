@@ -1,4 +1,5 @@
 package pages;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,20 +7,19 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
-
+import java.util.Objects;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.*;
 
-
 public class Register implements ActionListener {
 
     protected JTextField username;
-   private JButton back,register;
-   private JFrame frame;
-   private JTextField password,name,email,age;
-   private JComboBox function;
+    private JButton back,register;
+    private JFrame frame;
+    private JTextField password,name,email,age;
+    private JComboBox function;
 
     public void menu() {
         JPanel panel = new JPanel();
@@ -105,7 +105,7 @@ public class Register implements ActionListener {
         frame.setVisible(true);
     }
 
-    private void registerbutton(){
+    public void registerbutton(){
 
         JSONObject obj = new JSONObject();
         Object p;
@@ -146,7 +146,7 @@ public class Register implements ActionListener {
         }
         frame.setVisible(false);
 
-        if(function.getSelectedItem().toString().equals("Client")){
+        if(Objects.requireNonNull(function.getSelectedItem()).toString().equals("Client")){
             ClientMenu client;
             client = new ClientMenu();
             client.menu();
@@ -158,6 +158,7 @@ public class Register implements ActionListener {
         }
 
     }
+
     @Override
     public void actionPerformed(ActionEvent e){
 

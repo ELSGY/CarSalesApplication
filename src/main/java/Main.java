@@ -19,7 +19,6 @@ public class Main{
 
         File to = new File("target\\src\\main\\resources");
 
-
         try {
             copyFile(from_data, to);
             copyFile(from_car, to);
@@ -32,8 +31,6 @@ public class Main{
         }
         FirstPage first=new FirstPage();
         first.startProgram();
-
-
 
     }
 }

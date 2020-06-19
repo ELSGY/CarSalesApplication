@@ -5,14 +5,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-
 
 public class ViewRequests implements ActionListener{
     protected String username;
@@ -21,6 +19,7 @@ public class ViewRequests implements ActionListener{
     private JButton rej;
     private JButton acc;
     private JButton back;
+
     public void GUIReq(String username) {
         this.username=username;
         JPanel panel = new JPanel();
@@ -119,8 +118,9 @@ public class ViewRequests implements ActionListener{
         return array;
 
     }
-
-    private void writeFile (JSONArray arr, String filepath){ //Scriere elemente in fisier
+    //Scriere elemente in fisier
+    private void writeFile (JSONArray arr, String filepath)
+    {
         try{
             File file=new File(filepath);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
@@ -142,7 +142,6 @@ public class ViewRequests implements ActionListener{
             if(position >= 0) {
                 //Daca linia este selectata
                 list = readFile("src/main/resources/requests.json");
-
                 if (acc.isEnabled()) {
                     obj.put("Brand", table.getValueAt(position, 1).toString());
                     obj.put("Model", table.getValueAt(position, 2).toString());
@@ -220,9 +219,5 @@ public class ViewRequests implements ActionListener{
             SellerMenu sel = new SellerMenu();
             sel.sellermenu(username);
         }
-
-
     }
-
-
 }
