@@ -119,8 +119,38 @@ public class RequestFormTest {
         Assert.assertEquals(true,result);
     }
 
+    //sendbutton
     @Test
-    public void sendbutton() {
+    public void AddOneObject(){
+        JSONArray expected = req.readFile("src/test/resources/addCar.json");
+        int res = req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "Audi","A6","2018","10000");
+        int difference = res - expected.size();
+        Assert.assertEquals(1, difference);
 
+    }
+
+    @Test
+    public void AddFiveCar(){
+        JSONArray expected = req.readFile("src/test/resources/addCar.json");
+        req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "Audi","A7","2018","10000");
+        req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "Audi","A7","2018","10000");
+        req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "Audi","A7","2018","10000");
+        req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "Audi","A7","2018","10000");
+        int res = req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "Audi","A7","2018","10000");
+        int difference = res - expected.size();
+        Assert.assertEquals(5, difference);
+    }
+
+    @Test
+    public void AddTenCar(){
+        JSONArray expected = req.readFile("src/test/resources/addCar.json");
+        int n =10;
+        while(n>0){
+            req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "Audi","A7","2018","10000");
+            n--;
+        }
+        JSONArray res = req.readFile("src/test/resources/addCar.json");
+        int difference = res.size() - expected.size();
+        Assert.assertEquals(10, difference);
     }
 }

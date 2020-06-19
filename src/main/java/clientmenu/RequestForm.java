@@ -127,7 +127,7 @@ public class RequestForm implements ActionListener {
         return true;
     }
 
-    public int sendbutton(String source, String destination){
+    public int sendbutton(String source, String destination, String brand, String model, String year, String price){
 
         JSONObject obj = new JSONObject();
         JSONArray list;
@@ -135,10 +135,10 @@ public class RequestForm implements ActionListener {
         list = readFile(source);
 
         //Adaugare continut nou
-        obj.put("Brand",brand.getText());
-        obj.put("Model",model.getText());
-        obj.put("Year",year.getText());
-        obj.put("Price",price.getText());
+        obj.put("Brand",brand);
+        obj.put("Model",model);
+        obj.put("Year",year);
+        obj.put("Price",price);
 
         list.add(obj);
         writeFile(list,destination);
@@ -151,7 +151,7 @@ public class RequestForm implements ActionListener {
         //Actiuni pentru butonul Register
         if(e.getSource()==send)
         {
-            sendbutton("src/main/resources/requests.json","src/main/resources/requests.json");
+            sendbutton("src/main/resources/requests.json","src/main/resources/requests.json", brand.getText(),model.getText(), year.getText(), price.getText());
             JOptionPane.showMessageDialog(frame, "Request sent!" );
             frame.setVisible(false);
             Application ap=new Application();
