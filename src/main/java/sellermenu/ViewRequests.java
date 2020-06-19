@@ -19,6 +19,7 @@ public class ViewRequests implements ActionListener{
     private JButton rej;
     private JButton acc;
     private JButton back;
+    private JSONArray list;
 
     public void GUIReq(String username) {
         this.username=username;
@@ -98,7 +99,7 @@ public class ViewRequests implements ActionListener{
 
     }
 
-    private JSONArray readFile(String filePath){
+    public JSONArray readFile(String filePath){
         JSONArray array = new JSONArray();
         JSONParser parser = new JSONParser();
         Object p;
@@ -118,9 +119,9 @@ public class ViewRequests implements ActionListener{
         return array;
 
     }
-    //Scriere elemente in fisier
-    private void writeFile (JSONArray arr, String filepath)
-    {
+
+    public void writeFile (JSONArray arr, String filepath) {
+        //Scriere elemente in fisier
         try{
             File file=new File(filepath);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
@@ -131,8 +132,7 @@ public class ViewRequests implements ActionListener{
         }
     }
 
-    JSONArray list;
-    private void ActionButtons(){
+    public void ActionButtons(){
         org.json.JSONObject obj = new org.json.JSONObject();
 
         try {
@@ -166,7 +166,7 @@ public class ViewRequests implements ActionListener{
         }
     }
 
-    private void UpdateTable(){
+    public void UpdateTable(){
         DefaultTableModel mod =new DefaultTableModel();
         mod.addColumn("Index");
         mod.addColumn("Brand");

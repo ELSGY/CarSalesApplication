@@ -99,9 +99,55 @@ public class EditCars implements ActionListener {
         }
     }
 
-    public void EdButton(){
+    public JSONArray readfile(String source){
+
+        //Parcurgere fisier cars.json pentru preluare detalii masini
         JSONParser parser = new JSONParser();
         Object p;
+        JSONArray array = new JSONArray();
+
+        //Copiere continut deja existent cu Parser
+        try{
+            FileReader readFile = new FileReader(source);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if(p instanceof JSONArray)
+            {
+                array =(JSONArray)p;
+            }
+        } catch (ParseException | IOException ex) {
+            ex.printStackTrace();
+        }
+        return array;
+    }
+
+    public void erase(JSONArray list,int index){
+
+        for (int i=0;i<list.size();i++) {
+            JSONObject obj=(JSONObject) list.get(i);
+            if(obj.get("Username").toString().equals(username)&&obj.get("Price").toString().equals(table.getValueAt(index - 1, 4)))
+            {
+                int org=list.indexOf(obj);
+                list.remove(org);
+            }
+        }
+
+    }
+
+    public void write(JSONArray list, String destination) {
+
+        try{
+            File file=new File(destination);
+            FileWriter fw=new FileWriter(file.getAbsoluteFile());
+            fw.write(list.toJSONString());
+            fw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void EdButton(){
         JSONArray list = new JSONArray();
         org.json.JSONObject object = new org.json.JSONObject();
         int index = (Integer) table.getValueAt(table.getSelectedRow(),0);//Preluare index
@@ -156,42 +202,17 @@ public class EditCars implements ActionListener {
             }
             object.put("Username",username);
 
-            //Copiere continut deja existent cu Parser
-            try{
-                FileReader readFile = new FileReader("src/main/resources/cars.json");
-                BufferedReader read = new BufferedReader(readFile);
-                p = parser.parse(read);
-                if(p instanceof JSONArray)
-                {
-                    list =(JSONArray)p;
-                }
-            } catch (ParseException | IOException ex) {
-                ex.printStackTrace();
-            }
-            System.out.println(price);
+            //Citire din fisier
+            list=readfile("src/main/resources/cars.json");
 
             //Stergere element "vechi editat"
-            for (int i=0;i<list.size();i++) {
-                JSONObject obj=(JSONObject) list.get(i);
-                if(obj.get("Username").toString().equals(username)&&obj.get("Price").toString().equals(table.getValueAt(index - 1, 4)))
-                {
-                    int org=list.indexOf(obj);
-                    list.remove(org);
-                }
-            }
+            erase(list,index);
 
             //Adaugare element nou
             list.add(object);
 
             //Rescriere elemente in fisier
-            try{
-                File file=new File("src/main/resources/cars.json");
-                FileWriter fw=new FileWriter(file.getAbsoluteFile());
-                fw.write(list.toJSONString());
-                fw.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            write(list,"src/main/resources/cars.json");
 
         }else {
             JOptionPane.showMessageDialog(edit, "You must select a car");

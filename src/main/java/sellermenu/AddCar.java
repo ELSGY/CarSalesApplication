@@ -86,6 +86,41 @@ public class AddCar implements ActionListener {
 
     }
 
+    public JSONArray readfile(String source){
+
+        //Parcurgere fisier cars.json pentru preluare detalii masini
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
+
+        //Copiere continut deja existent cu Parser
+        try{
+            FileReader readFile = new FileReader(source);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if(p instanceof JSONArray)
+            {
+                array =(JSONArray)p;
+            }
+        } catch (ParseException | IOException ex) {
+            ex.printStackTrace();
+        }
+        return array;
+    }
+
+    public void write(JSONArray list, String destination) {
+        //Scriere in fisier continut nou
+        try{
+            File file=new File(destination);
+            FileWriter fw=new FileWriter(file.getAbsoluteFile());
+            fw.write(list.toJSONString());
+            fw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
     public void addcar(String username){
 
         JSONObject obj = new JSONObject();
@@ -93,18 +128,7 @@ public class AddCar implements ActionListener {
         JSONParser parser = new JSONParser();
         JSONArray list = new JSONArray();
 
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader("src/main/resources/cars.json");
-            BufferedReader read = new BufferedReader(readFile);
-            p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                list =(JSONArray)p;
-            }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
-        }
+        list=readfile("src/main/resources/cars.json");
 
         //Adaugare continut nou
         obj.put("Username",username);
@@ -115,15 +139,8 @@ public class AddCar implements ActionListener {
 
         list.add(obj);
 
-        //Scriere in fisier continut nou
-        try{
-            File file=new File("src/main/resources/cars.json");
-            FileWriter fw=new FileWriter(file.getAbsoluteFile());
-            fw.write(list.toJSONString());
-            fw.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        write(list,"src/main/resources/cars.json");
+
 
     }
 

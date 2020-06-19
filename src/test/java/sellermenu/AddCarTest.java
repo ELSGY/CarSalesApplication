@@ -1,15 +1,12 @@
 package sellermenu;
 
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testng.Assert;
 import javax.swing.*;
-import java.io.*;
 
 public class AddCarTest {
 
@@ -39,19 +36,8 @@ public class AddCarTest {
         org.json.simple.JSONArray list2 = new org.json.simple.JSONArray();
         boolean adaugat=false;
 
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader("src/test/resources/cars.json");
-            BufferedReader read = new BufferedReader(readFile);
-            p = parser.parse(read);
-            if(p instanceof org.json.simple.JSONArray)
-            {
-                list1 =(JSONArray)p;
-                list2 =(JSONArray)p;
-            }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
-        }
+        list1=test.readfile("src/test/resources/cars.json");
+        list2=test.readfile("src/test/resources/cars.json");
 
         String brand="Tesla";
         String model="X";
@@ -65,16 +51,7 @@ public class AddCarTest {
         obj.put("Price",price);
 
         list1.add(obj);
-
-        //Scriere in fisier continut nou
-        try{
-            File file=new File("src/test/resources/cars.json");
-            FileWriter fw=new FileWriter(file.getAbsoluteFile());
-            fw.write(list1.toJSONString());
-            fw.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        test.write(list1,"src/test/resources/cars.json");
 
         if(list1.size()-list2.size()==1)
         {
