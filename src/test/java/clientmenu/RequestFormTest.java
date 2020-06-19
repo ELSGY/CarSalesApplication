@@ -1,5 +1,6 @@
 package clientmenu;
 
+import exceptions.NotAllFieldsCompleted;
 import exceptions.NotJSONFileException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -7,8 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testng.Assert;
-
-import static org.junit.Assert.*;
 
 public class RequestFormTest {
 
@@ -120,6 +119,10 @@ public class RequestFormTest {
     }
 
     //sendbutton
+    @Test(expected = NotAllFieldsCompleted.class)
+    public void OneFieldNotCompleted(){
+        req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "","A6","2018","1000");
+    }
     @Test
     public void AddOneObject(){
         JSONArray expected = req.readFile("src/test/resources/addCar.json");

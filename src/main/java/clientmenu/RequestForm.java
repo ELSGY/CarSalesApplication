@@ -8,6 +8,7 @@ import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
 
+import exceptions.NotAllFieldsCompleted;
 import exceptions.NotJSONFileException;
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
@@ -127,7 +128,10 @@ public class RequestForm implements ActionListener {
         return true;
     }
 
-    public int sendbutton(String source, String destination, String brand, String model, String year, String price){
+    public int sendbutton(String source, String destination, String brand, String model, String year, String price) throws NotAllFieldsCompleted {
+       if(brand.equals("") || model.equals("") || year.equals("") || price.equals("")){
+           throw new NotAllFieldsCompleted();
+       }
 
         JSONObject obj = new JSONObject();
         JSONArray list;
