@@ -20,6 +20,26 @@ public class ViewCars implements ActionListener {
     private JFrame frame;
     private JButton back;
 
+    public JSONArray readfile(String source){
+
+        //Parcurgere fisier cars.json pentru preluare detalii masini
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
+
+        try {
+            FileReader readFile = new FileReader(source);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
+            }
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+        }
+            return array;
+    }
+
     public void GUIView(String username) {
         this.username=username;
         JPanel panel = new JPanel();
@@ -28,6 +48,7 @@ public class ViewCars implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         panel.setLayout(new FlowLayout());
+        JSONArray array = new JSONArray();
 
         panel.setBackground(Color.lightGray);
 
@@ -41,22 +62,7 @@ public class ViewCars implements ActionListener {
         model.addColumn("Price");
         JTable table=new JTable(model);
 
-        //Parcurgere fisier cars.json pentru preluare detalii masini
-        JSONParser parser = new JSONParser();
-        Object p;
-        JSONArray array = new JSONArray();
-
-        try {
-            FileReader readFile = new FileReader("src/main/resources/cars.json");
-            BufferedReader read = new BufferedReader(readFile);
-            p = parser.parse(read);
-            if (p instanceof JSONArray) {
-                array = (JSONArray) p;
-            }
-        } catch (ParseException | IOException parseException) {
-            parseException.printStackTrace();
-        }
-
+        array=readfile("src/main/resources/cars.json");
         if(array.isEmpty()){
             JOptionPane.showMessageDialog(frame, "Empty list!" );
             SellerMenu bfp = new SellerMenu();
