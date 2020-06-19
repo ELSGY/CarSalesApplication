@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
+
+import exceptions.NotJSONFileException;
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.*;
@@ -84,26 +86,53 @@ public class RequestForm implements ActionListener {
 
         frame.setVisible(true);
     }
+    public JSONArray readFile(String file) throws NotJSONFileException {
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
 
-    private void sendbutton(){
-
-        JSONObject obj = new JSONObject();
-        Object p;
         JSONParser parser = new JSONParser();
-        JSONArray list = new JSONArray();
+        Object p;
+        JSONArray array = new JSONArray();
 
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader("src/main/resources/requests.json");
+        try {
+            FileReader readFile = new FileReader(file);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                list =(JSONArray)p;
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
             }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
+        }catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
         }
+        return array;
+    }
+
+    public boolean writeFile(JSONArray list, String JSONFile) throws NotJSONFileException{
+        if(!JSONFile.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
+        //Scriere in fisier continut nou
+        try{
+            File file=new File(JSONFile);
+            FileWriter fw=new FileWriter(file.getAbsoluteFile());
+            fw.write(list.toJSONString());
+            fw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public int sendbutton(String source, String destination){
+
+        JSONObject obj = new JSONObject();
+        JSONArray list;
+
+        list = readFile(source);
 
         //Adaugare continut nou
         obj.put("Brand",brand.getText());
@@ -112,16 +141,8 @@ public class RequestForm implements ActionListener {
         obj.put("Price",price.getText());
 
         list.add(obj);
-
-        //Scriere in fisier continut nou
-        try{
-            File file=new File("src/main/resources/requests.json");
-            FileWriter fw=new FileWriter(file.getAbsoluteFile());
-            fw.write(list.toJSONString());
-            fw.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        writeFile(list,destination);
+        return list.size();
 
     }
     @Override
@@ -130,7 +151,7 @@ public class RequestForm implements ActionListener {
         //Actiuni pentru butonul Register
         if(e.getSource()==send)
         {
-            sendbutton();
+            sendbutton("src/main/resources/requests.json","src/main/resources/requests.json");
             JOptionPane.showMessageDialog(frame, "Request sent!" );
             frame.setVisible(false);
             Application ap=new Application();
