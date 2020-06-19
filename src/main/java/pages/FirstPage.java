@@ -1,5 +1,6 @@
 package pages;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -88,7 +89,11 @@ public class FirstPage implements ActionListener {
         frame.setVisible(true);
     }
 
-    public JSONArray readfile(String source){
+    public JSONArray readFile(String source) throws NotJSONFileException {
+        if(!source.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
 
         //Parcurgere fisier
         JSONParser parser = new JSONParser();
@@ -125,7 +130,7 @@ public class FirstPage implements ActionListener {
             JOptionPane.showMessageDialog(frame, "Invalid");
         }
         else {
-            array=readfile("src/main/resources/data.json");
+            array=readFile("src/main/resources/data.json");
 
             compare.put("Username", user);
             compare.put("Password", pass);
