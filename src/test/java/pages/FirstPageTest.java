@@ -2,6 +2,7 @@ package pages;
 
 import exceptions.NotJSONFileException;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,18 +54,26 @@ public class FirstPageTest extends FirstPage {
     }
 
     @Test
-    public void loginbutton() {
+    public void userNotFound() {
+        JSONArray array =readFile("src/test/resources/data.json");
+        JSONObject compare = new JSONObject();
+        compare.put("Username", "user");
+        compare.put("Password", "fals");
+        compare.put("Function", "seller");
+        boolean ok = test.findUser(compare, array);
+        Assert.assertEquals(false, ok);
 
-        JSONArray list=new JSONArray();
-        boolean okay=false;
+    }
 
-        list=test.readFile("src/test/resources/data.json");
+    @Test
+    public void userFound() {
+        JSONArray array =readFile("src/test/resources/user.json");
+        JSONObject compare = new JSONObject();
+        compare.put("Username", "admin");
+        compare.put("Password", "admin");
+        compare.put("Function", "Client");
+        boolean ok = test.findUser(compare, array);
+        Assert.assertEquals(true, ok);
 
-        if(!list.isEmpty())
-        {
-            okay=true;
-        }
-
-        Assert.assertTrue(okay=true);
     }
 }

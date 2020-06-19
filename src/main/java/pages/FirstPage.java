@@ -113,7 +113,22 @@ public class FirstPage implements ActionListener {
         return array;
     }
 
-    public void loginbutton(){
+    public boolean findUser(JSONObject compare, JSONArray array){
+        boolean ok = false;
+        Iterator<JSONObject> itr = array.iterator();
+
+        while(itr.hasNext()) {
+            JSONObject obj = itr.next();
+
+            if (obj.get("Password").equals(compare.get("Password")) && obj.get("Function").equals(compare.get("Function")) && obj.get("Username").equals(compare.get("Username"))){
+                ok=true;
+            }
+
+        }
+        return ok;
+    }
+
+    public void loginbutton(String source){
 
         boolean ok = false;
 
@@ -130,7 +145,7 @@ public class FirstPage implements ActionListener {
             JOptionPane.showMessageDialog(frame, "Invalid");
         }
         else {
-            array=readFile("src/main/resources/data.json");
+            array=readFile(source);
 
             compare.put("Username", user);
             compare.put("Password", pass);
@@ -142,37 +157,27 @@ public class FirstPage implements ActionListener {
             }
 
             compare.put("Function", function);
+            ok = findUser(compare, array);
 
-            Iterator<JSONObject> itr = array.iterator();
-
-            while(itr.hasNext()) {
-                JSONObject obj = itr.next();
-
-                if (obj.get("Password").equals(compare.get("Password")) && obj.get("Function").equals(compare.get("Function")) && obj.get("Username").equals(compare.get("Username")))
+            if (ok)
                 {
                     frame.setVisible(false);
-                    ok = true;
 
                     if (checkclient.isSelected()) {
                         ClientMenu client;
                         client = new ClientMenu();
                         client.menu();
-                        break;
                     }
 
                     if (checkseller.isSelected()) {
                         SellerMenu seller;
                         seller = new SellerMenu();
                         seller.sellermenu(username.getText());
-                        break;
                     }
                 }
-
-            }
             if(!ok) {
                 JOptionPane.showMessageDialog(frame, "Invalid");
             }
-
         }
     }
 
@@ -181,7 +186,7 @@ public class FirstPage implements ActionListener {
 
     //Actiuni pentru butonul Log In
         if(e.getSource()==login) {
-            loginbutton();
+            loginbutton("src/main/resources/data.json");
 
         }
 
