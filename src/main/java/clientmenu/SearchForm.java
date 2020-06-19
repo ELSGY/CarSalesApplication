@@ -1,5 +1,6 @@
 package clientmenu;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -45,22 +46,8 @@ public class SearchForm implements ActionListener {
         model.addColumn("Price");
         JTable table = new JTable(model);
 
-        //Parcurgere fisier cars.json pentru preluare detalii masini
-        JSONParser parser = new JSONParser();
-        Object p;
         JSONArray array = new JSONArray();
-
-        try {
-            FileReader readFile = new FileReader("src/main/resources/cars.json");
-            BufferedReader read = new BufferedReader(readFile);
-            p = parser.parse(read);
-            if (p instanceof JSONArray) {
-                array = (JSONArray) p;
-            }
-        } catch (ParseException | IOException parseException) {
-            parseException.printStackTrace();
-        }
-
+        array = readFile("src/main/resources/cars.json");
 
             int index = 1, ok = 0;
             //Verificare masina cautata
@@ -106,6 +93,31 @@ public class SearchForm implements ActionListener {
 
             }
         }
+
+    public JSONArray readFile(String file) throws NotJSONFileException {
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
+
+        try {
+            FileReader readFile = new FileReader(file);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
+            }
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
+        }
+        return array;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
