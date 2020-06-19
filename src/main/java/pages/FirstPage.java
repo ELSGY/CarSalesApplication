@@ -88,6 +88,26 @@ public class FirstPage implements ActionListener {
         frame.setVisible(true);
     }
 
+    public JSONArray readfile(String source){
+
+        //Parcurgere fisier
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
+
+        try {
+            FileReader readFile = new FileReader(source);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
+            }
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+        }
+        return array;
+    }
+
     public void loginbutton(){
 
         boolean ok = false;
@@ -97,9 +117,7 @@ public class FirstPage implements ActionListener {
         String function;
 
         //Citire date din fisier .json
-        JSONParser parser = new JSONParser();
         JSONObject compare = new JSONObject();
-        Object p;
         JSONArray array = new JSONArray();
 
         if ((checkclient.isSelected() && checkseller.isSelected()) || (!checkclient.isSelected() && !checkseller.isSelected())) {
@@ -107,17 +125,7 @@ public class FirstPage implements ActionListener {
             JOptionPane.showMessageDialog(frame, "Invalid");
         }
         else {
-            try {
-                FileReader readFile = new FileReader("src/main/resources/data.json");
-                BufferedReader read = new BufferedReader(readFile);
-                p = parser.parse(read);
-                if (p instanceof JSONArray) {
-                    array = (JSONArray) p;
-                }
-            } catch (ParseException | IOException parseException) {
-                parseException.printStackTrace();
-            }
-            // System.out.println(array.toString());
+            array=readfile("src/main/resources/data.json");
 
             compare.put("Username", user);
             compare.put("Password", pass);
@@ -130,14 +138,13 @@ public class FirstPage implements ActionListener {
 
             compare.put("Function", function);
 
-            //  System.out.println(compare.toString());
-
             Iterator<JSONObject> itr = array.iterator();
 
             while(itr.hasNext()) {
                 JSONObject obj = itr.next();
 
-                if (obj.get("Password").equals(compare.get("Password")) && obj.get("Function").equals(compare.get("Function")) && obj.get("Username").equals(compare.get("Username"))) {
+                if (obj.get("Password").equals(compare.get("Password")) && obj.get("Function").equals(compare.get("Function")) && obj.get("Username").equals(compare.get("Username")))
+                {
                     frame.setVisible(false);
                     ok = true;
 

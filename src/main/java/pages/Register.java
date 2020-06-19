@@ -105,16 +105,13 @@ public class Register implements ActionListener {
         frame.setVisible(true);
     }
 
-    public void registerbutton(){
+    public JSONArray read(String source){
 
-        JSONObject obj = new JSONObject();
         Object p;
         JSONParser parser = new JSONParser();
         JSONArray list = new JSONArray();
-
-        //Copiere continut deja existent cu Parser
         try{
-            FileReader readFile = new FileReader("src/main/resources/data.json");
+            FileReader readFile = new FileReader(source);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
             if(p instanceof JSONArray)
@@ -124,6 +121,28 @@ public class Register implements ActionListener {
         } catch (ParseException | IOException ex) {
             ex.printStackTrace();
         }
+        return list;
+    }
+
+    public void write(JSONArray list,String destination){
+
+        try{
+            File file=new File(destination);
+            FileWriter fw=new FileWriter(file.getAbsoluteFile());
+            fw.write(list.toJSONString());
+            fw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void registerbutton(){
+
+        JSONObject obj = new JSONObject();
+        JSONArray list = new JSONArray();
+
+        //Copiere continut deja existent cu Parser
+        list=read("src/main/resources/data.json");
 
         //Adaugare continut nou
         obj.put("Name",name.getText());
@@ -136,14 +155,8 @@ public class Register implements ActionListener {
         list.add(obj);
 
         //Scriere in fisier continut nou
-        try{
-            File file=new File("src/main/resources/data.json");
-            FileWriter fw=new FileWriter(file.getAbsoluteFile());
-            fw.write(list.toJSONString());
-            fw.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        write(list,"src/main/resources/data.json");
+
         frame.setVisible(false);
 
         if(Objects.requireNonNull(function.getSelectedItem()).toString().equals("Client")){
