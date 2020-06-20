@@ -87,6 +87,7 @@ public class RequestForm implements ActionListener {
 
         frame.setVisible(true);
     }
+
     public JSONArray readFile(String file) throws NotJSONFileException {
         if(!file.endsWith(".json")){
             throw new NotJSONFileException();

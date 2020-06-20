@@ -1,5 +1,7 @@
 package sellermenu;
 
+import exceptions.NotAllFieldsCompleted;
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.JSONObject;
 import org.json.simple.JSONArray;
@@ -86,62 +88,76 @@ public class AddCar implements ActionListener {
 
     }
 
-    public JSONArray readfile(String source){
+    public JSONArray readFile(String file) throws NotJSONFileException {
 
-        //Parcurgere fisier cars.json pentru preluare detalii masini
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
         JSONParser parser = new JSONParser();
         Object p;
         JSONArray array = new JSONArray();
 
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader(source);
+        try {
+            FileReader readFile = new FileReader(file);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                array =(JSONArray)p;
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
             }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
         }
         return array;
     }
 
-    public void write(JSONArray list, String destination) {
+    public boolean writeFile(JSONArray list, String JSONFile) throws NotJSONFileException{
+
+        if(!JSONFile.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
         //Scriere in fisier continut nou
         try{
-            File file=new File(destination);
+            File file=new File(JSONFile);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
             fw.write(list.toJSONString());
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+            return false;
         }
-
+        return true;
     }
 
-    public void addcar(String username){
+    public int addcar(String username,String brand, String model, String year, String price, String file) throws NotAllFieldsCompleted {
+
+        if(brand.equals("") || model.equals("") || year.equals("") || price.equals("")){
+            throw new NotAllFieldsCompleted();
+        }
 
         JSONObject obj = new JSONObject();
         Object p;
         JSONParser parser = new JSONParser();
         JSONArray list = new JSONArray();
 
-        list=readfile("src/main/resources/cars.json");
+        list=readFile(file);
 
         //Adaugare continut nou
         obj.put("Username",username);
-        obj.put("Brand",brand.getText());
-        obj.put("Model",model.getText());
-        obj.put("Year",year.getText());
-        obj.put("Price",price.getText());
+        obj.put("Brand",brand);
+        obj.put("Model",model);
+        obj.put("Year",year);
+        obj.put("Price",price);
 
         list.add(obj);
 
-        write(list,"src/main/resources/cars.json");
+        writeFile(list,file);
 
-
+       return list.size();
     }
 
     @Override
@@ -149,7 +165,7 @@ public class AddCar implements ActionListener {
 
         if(e.getSource()==addcar)
         {
-            addcar(username);
+            addcar(username,brand.getText(),model.getText(),year.getText(),price.getText(),"src/main/resources/cars.json");
             JOptionPane.showMessageDialog(frame, "Car Added");
             frame.setVisible(false);
             SellerMenu bfp = new SellerMenu();

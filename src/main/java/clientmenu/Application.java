@@ -64,6 +64,7 @@ public class Application implements ActionListener {
                 ap.start();
             }
     }
+
     public void actionPerformed(ActionEvent e) {
 
         //Actiuni
