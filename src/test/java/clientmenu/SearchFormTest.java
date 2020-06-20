@@ -22,6 +22,7 @@ public class SearchFormTest {
         test = null;
     }
 
+    //readFile
     @Test(expected = NotJSONFileException.class)
     public void readNotJSONFile(){
         test.readFile("src/test/resources/empty.png");

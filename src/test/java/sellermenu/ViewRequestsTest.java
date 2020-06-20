@@ -1,5 +1,6 @@
 package sellermenu;
 
+import exceptions.NotJSONFileException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.After;
@@ -23,32 +24,99 @@ public class ViewRequestsTest {
         test=null;
     }
 
+    //readFile
+    @Test(expected = NotJSONFileException.class)
+    public void readNotJSONFile(){
+        test.readFile("src/test/resources/empty.png");
+    }
+
     @Test
-    public void actionButtons() {
+    public void readEmptyFile() {
 
-        JSONArray list1,list2=new JSONArray();
-        boolean okay=false;
+        JSONArray expectedResult = new JSONArray();
+        JSONArray computedResult = test.readFile("src/test/resources/empty.json");
+        Assert.assertEquals(expectedResult, computedResult);
+    }
 
-        list1=test.readFile("src/test/resources/requests.json");
-        list2=test.readFile("src/test/resources/requests.json");
+    @Test
+    public void readFiveFiles(){
+        JSONArray computedResult = test.readFile("src/test/resources/five.json");
+        Assert.assertEquals(5, computedResult.size());
+    }
 
-        JSONObject obj=new JSONObject();
-        obj.put("Brand","AAA");
-        obj.put("Model","BBB");
-        obj.put("Year","CCC");
-        obj.put("Price","DDD");
+    @Test
+    public void readTenFiles(){
+        JSONArray computedResult = test.readFile("src/test/resources/ten.json");
+        Assert.assertEquals(10, computedResult.size());
+    }
 
-        list1.add(obj);
-        
-        if(!list1.isEmpty())
-        {
-            test.writeFile(list1,"src/test/resources/requests.json");
-            if(list1.size()-list2.size()==1) {
-                okay = true;
-            }
-        }
+    //writeFile
+    @Test(expected = NotJSONFileException.class)
+    public void writeNotJSONFile() {
+        JSONArray array = new JSONArray();
+        test.writeFile(array, "File.png");
+    }
 
-        Assert.assertTrue(okay=true);
+    @Test
+    public void writeEmptyArray(){
+        JSONArray array = new JSONArray();
+        boolean result =  test.writeFile(array,"src/test/resources/empty.json" );
+        Assert.assertEquals(true,result );
+    }
 
+    @Test
+    public void writeOneObject(){
+        JSONArray array = new JSONArray();
+        org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
+        obj.put("Brand","BMW");
+        obj.put("Model","X7");
+        obj.put("Year","2019");
+        obj.put("Price","20000");
+        array.add(obj);
+        boolean result = test.writeFile(array, "src/test/resources/requests.json");
+        Assert.assertEquals(true,result);
+    }
+
+    @Test
+    public void writeFiveObject(){
+        JSONArray array = new JSONArray();
+        org.json.simple.JSONObject obj1 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj2 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj3 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj4 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj5 = new org.json.simple.JSONObject();
+
+        obj1.put("Brand","BMW");
+        obj1.put("Model","X6");
+        obj1.put("Year","2019");
+        obj1.put("Price","20000");
+        array.add(obj1);
+
+        obj2.put("Brand","BMW");
+        obj2.put("Model","X5");
+        obj2.put("Year","2019");
+        obj2.put("Price","20000");
+        array.add(obj2);
+
+        obj3.put("Brand","BMW");
+        obj3.put("Model","X4");
+        obj3.put("Year","2019");
+        obj3.put("Price","20000");
+        array.add(obj3);
+
+        obj4.put("Brand","BMW");
+        obj4.put("Model","X3");
+        obj4.put("Year","2019");
+        obj4.put("Price","20000");
+        array.add(obj4);
+
+        obj5.put("Brand","BMW");
+        obj5.put("Model","X2");
+        obj5.put("Year","2019");
+        obj5.put("Price","20000");
+        array.add(obj5);
+
+        boolean result = test.writeFile(array, "src/test/resources/requests.json");
+        Assert.assertEquals(true,result);
     }
 }

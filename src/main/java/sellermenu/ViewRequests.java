@@ -1,5 +1,6 @@
 package sellermenu;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -99,37 +100,49 @@ public class ViewRequests implements ActionListener{
 
     }
 
-    public JSONArray readFile(String filePath){
-        JSONArray array = new JSONArray();
+    public JSONArray readFile(String file) throws NotJSONFileException {
+
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
         JSONParser parser = new JSONParser();
         Object p;
+        JSONArray array = new JSONArray();
 
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader(filePath);
+        try {
+            FileReader readFile = new FileReader(file);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                array =(JSONArray)p;
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
             }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
         }
         return array;
-
     }
 
-    public void writeFile (JSONArray arr, String filepath) {
-        //Scriere elemente in fisier
+    public boolean writeFile(JSONArray list, String JSONFile) throws NotJSONFileException{
+
+        if(!JSONFile.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
+        //Scriere in fisier continut nou
         try{
-            File file=new File(filepath);
+            File file=new File(JSONFile);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
-            fw.write(arr.toJSONString());
+            fw.write(list.toJSONString());
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public void ActionButtons(){
