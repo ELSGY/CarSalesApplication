@@ -1,15 +1,11 @@
 package sellermenu;
 
-import org.json.JSONObject;
+import exceptions.NotJSONFileException;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testng.Assert;
-
-import java.io.*;
 
 import static org.junit.Assert.*;
 
@@ -26,49 +22,209 @@ public class EditCarsTest {
         test=null;
     }
 
+    //readFile
+    @Test(expected = NotJSONFileException.class)
+    public void NotJSONFile() {
+        test.readFile("File.png");
+    }
+
     @Test
-    public void edButton() {
+    public void readEmptyFile(){
+        JSONArray expectedResult = new JSONArray();
+        JSONArray computedResult = test.readFile("src/test/resources/empty.json");
+        Assert.assertEquals(expectedResult, computedResult);
+    }
 
-        JSONArray list = new JSONArray();
-        JSONObject obj = new JSONObject();//cel adaugat
-        boolean editat=false;
+    @Test
+    public void readFiveFiles(){
+        JSONArray computedResult = test.readFile("src/test/resources/five.json");
+        Assert.assertEquals(5, computedResult.size());
+    }
 
-        String brand = "BMW";
-        String model = "Seria 5";
-        String price = "30.000";
-        String year = "2020";
+    @Test
+    public void readTenFiles(){
+        JSONArray computedResult = test.readFile("src/test/resources/ten.json");
+        Assert.assertEquals(10, computedResult.size());
+    }
 
-        //Copiere continut deja existent cu Parser
-        test.readfile("src/test/resources/cars.json");
+    //writeFile
+    @Test(expected = NotJSONFileException.class)
+    public void writeNotJSONFile() {
+        JSONArray array = new JSONArray();
+        test.writeFile(array, "File.png");
+    }
 
-        //Stergem ultimul obiect din lista
-        int i = list.size()-1;
-        test.erase(list,i);
+    @Test
+    public void writeEmptyArray(){
+        JSONArray array = new JSONArray();
+        boolean result =  test.writeFile(array,"src/test/resources/empty.json" );
+        Assert.assertEquals(true,result );
+    }
 
-        //Copiere/update in .json object
-        obj.put("Username", "admin");//username de test
-        obj.put("Brand", brand);
-        obj.put("Model", model);
-        obj.put("Year", year);
-        obj.put("Price", price);
+    @Test
+    public void writeOneObject(){
+        JSONArray array = new JSONArray();
+        org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
+        obj.put("Username","admin");
+        obj.put("Brand","BMW");
+        obj.put("Model","X7");
+        obj.put("Year","2019");
+        obj.put("Price","20000");
+        array.add(obj);
+        boolean result = test.writeFile(array, "src/test/resources/addCarTest.json");
+        Assert.assertEquals(true,result);
+    }
 
-        list.add(obj);
+    @Test
+    public void writeFiveObject(){
+        JSONArray array = new JSONArray();
+        org.json.simple.JSONObject obj1 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj2 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj3 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj4 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj5 = new org.json.simple.JSONObject();
 
-        //Scriere in fisier continut nou
-        test.write(list,"src/test/resources/cars.json");
+        obj1.put("Username","admin");
+        obj1.put("Brand","BMW");
+        obj1.put("Model","X6");
+        obj1.put("Year","2019");
+        obj1.put("Price","20000");
+        array.add(obj1);
 
-        for (org.json.JSONObject it : (Iterable<org.json.JSONObject>) list)
-        {
-            if ((it.get("Brand").toString()).equals(brand)
-                    && (it.get("Model").toString()).equals(model)
-                    && (it.get("Price").toString()).equals(price)
-                    && (it.get("Year").toString()).equals(year)) {
+        obj2.put("Username","admin");
+        obj2.put("Brand","BMW");
+        obj2.put("Model","X5");
+        obj2.put("Year","2019");
+        obj2.put("Price","20000");
+        array.add(obj2);
 
-                editat = true;
+        obj3.put("Username","admin");
+        obj3.put("Brand","BMW");
+        obj3.put("Model","X4");
+        obj3.put("Year","2019");
+        obj3.put("Price","20000");
+        array.add(obj3);
 
-            }
-        }
+        obj4.put("Username","admin");
+        obj4.put("Brand","BMW");
+        obj4.put("Model","X3");
+        obj4.put("Year","2019");
+        obj4.put("Price","20000");
+        array.add(obj4);
 
-        Assert.assertTrue(editat=true);
+        obj5.put("Username","admin");
+        obj5.put("Brand","BMW");
+        obj5.put("Model","X2");
+        obj5.put("Year","2019");
+        obj5.put("Price","20000");
+        array.add(obj5);
+
+        boolean result = test.writeFile(array, "src/test/resources/addCarTest.json");
+        Assert.assertEquals(true,result);
+    }
+
+    @Test
+    public void eraseTest(){
+
+        JSONArray array = new JSONArray();
+        org.json.simple.JSONObject obj1 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj2 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj3 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj4 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj5 = new org.json.simple.JSONObject();
+
+        obj1.put("Username","admin");
+        obj1.put("Brand","BMW");
+        obj1.put("Model","X6");
+        obj1.put("Year","2019");
+        obj1.put("Price","20000");
+        array.add(obj1);
+
+        obj2.put("Username","admin");
+        obj2.put("Brand","BMW");
+        obj2.put("Model","X5");
+        obj2.put("Year","2019");
+        obj2.put("Price","20000");
+        array.add(obj2);
+
+        obj3.put("Username","admin");
+        obj3.put("Brand","BMW");
+        obj3.put("Model","X4");
+        obj3.put("Year","2019");
+        obj3.put("Price","20000");
+        array.add(obj3);
+
+        obj4.put("Username","admin");
+        obj4.put("Brand","BMW");
+        obj4.put("Model","X3");
+        obj4.put("Year","2019");
+        obj4.put("Price","20000");
+        array.add(obj4);
+
+        obj5.put("Username","admin");
+        obj5.put("Brand","Mercedes");
+        obj5.put("Model","X2");
+        obj5.put("Year","2020");
+        obj5.put("Price","3000");
+        array.add(obj5);
+
+        boolean result = test.erase(array,"admin" ,"Mercedes","X2","2020","3000");
+
+        Assert.assertEquals(true,result);
+
+    }
+
+    @Test
+    public void erase2Test(){
+
+        JSONArray array = new JSONArray();
+        org.json.simple.JSONObject obj1 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj2 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj3 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj4 = new org.json.simple.JSONObject();
+        org.json.simple.JSONObject obj5 = new org.json.simple.JSONObject();
+
+        obj1.put("Username","admin");
+        obj1.put("Brand","BMW");
+        obj1.put("Model","X6");
+        obj1.put("Year","2019");
+        obj1.put("Price","20000");
+        array.add(obj1);
+
+        obj2.put("Username","admin");
+        obj2.put("Brand","BMW");
+        obj2.put("Model","X5");
+        obj2.put("Year","2019");
+        obj2.put("Price","20000");
+        array.add(obj2);
+
+        obj3.put("Username","admin");
+        obj3.put("Brand","BMW");
+        obj3.put("Model","X4");
+        obj3.put("Year","2019");
+        obj3.put("Price","20000");
+        array.add(obj3);
+
+        obj4.put("Username","admin");
+        obj4.put("Brand","BMW");
+        obj4.put("Model","X3");
+        obj4.put("Year","2019");
+        obj4.put("Price","40000");
+        array.add(obj4);
+
+        obj5.put("Username","admin");
+        obj5.put("Brand","Mercedes");
+        obj5.put("Model","X2");
+        obj5.put("Year","2020");
+        obj5.put("Price","3000");
+        array.add(obj5);
+
+        int org=array.size();
+        test.erase(array,"admin" ,"Mercedes","X2","2020","3000");
+        test.erase(array,"admin" ,"BMW","X3","2019","40000");
+        int org2=array.size();
+
+        Assert.assertEquals(2,org-org2);
+
     }
 }

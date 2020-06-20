@@ -1,5 +1,6 @@
 package sellermenu;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -99,52 +100,64 @@ public class EditCars implements ActionListener {
         }
     }
 
-    public JSONArray readfile(String source){
+    public JSONArray readFile(String file) throws NotJSONFileException {
 
-        //Parcurgere fisier cars.json pentru preluare detalii masini
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
         JSONParser parser = new JSONParser();
         Object p;
         JSONArray array = new JSONArray();
 
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader(source);
+        try {
+            FileReader readFile = new FileReader(file);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                array =(JSONArray)p;
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
             }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
         }
         return array;
     }
 
-    public void erase(JSONArray list,int index){
+    public boolean erase(JSONArray list,String username,String brand,String model,String year,String price){
 
+        boolean okay=false;
         for (int i=0;i<list.size();i++) {
             JSONObject obj=(JSONObject) list.get(i);
-            if(obj.get("Username").toString().equals(username)&&obj.get("Price").toString().equals(table.getValueAt(index - 1, 4)))
+            if(obj.get("Username").toString().equals(username)&&obj.get("Brand").toString().equals(brand)&&obj.get("Model").toString().equals(model)&&obj.get("Year").toString().equals(year)&&obj.get("Price").toString().equals(price))
             {
                 int org=list.indexOf(obj);
                 list.remove(org);
+                okay=true;
             }
         }
-
+       return okay;
     }
 
-    public void write(JSONArray list, String destination) {
+    public boolean writeFile(JSONArray list, String JSONFile) throws NotJSONFileException{
 
+        if(!JSONFile.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
+        //Scriere in fisier continut nou
         try{
-            File file=new File(destination);
+            File file=new File(JSONFile);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
             fw.write(list.toJSONString());
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+            return false;
         }
-
+        return true;
     }
 
     public void EdButton(){
@@ -158,6 +171,12 @@ public class EditCars implements ActionListener {
             String model = JOptionPane.showInputDialog("Model");
             String year = JOptionPane.showInputDialog("Year");
             String price = JOptionPane.showInputDialog("Price");
+
+            //Citire din fisier
+            list=readFile("src/main/resources/cars.json");
+
+            //Stergere element "vechi editat"
+            erase(list,username,(String)table.getValueAt(index - 1, 1),(String)table.getValueAt(index - 1, 2),(String)table.getValueAt(index - 1, 3),(String)table.getValueAt(index - 1, 4));
 
             //Edit button
             if(brand.isEmpty()) {
@@ -202,19 +221,14 @@ public class EditCars implements ActionListener {
             }
             object.put("Username",username);
 
-            //Citire din fisier
-            list=readfile("src/main/resources/cars.json");
-
-            //Stergere element "vechi editat"
-            erase(list,index);
-
             //Adaugare element nou
             list.add(object);
 
             //Rescriere elemente in fisier
-            write(list,"src/main/resources/cars.json");
+            writeFile(list,"src/main/resources/cars.json");
 
-        }else {
+        }
+        else {
             JOptionPane.showMessageDialog(edit, "You must select a car");
         }
     }
