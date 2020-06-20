@@ -1,5 +1,6 @@
 package sellermenu;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.JSONString;
 import org.json.simple.JSONArray;
@@ -12,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -20,24 +22,30 @@ public class ViewCars implements ActionListener {
     private JFrame frame;
     private JButton back;
 
-    public JSONArray readfile(String source){
+    public JSONArray readFile(String file) throws NotJSONFileException {
 
-        //Parcurgere fisier cars.json pentru preluare detalii masini
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
         JSONParser parser = new JSONParser();
         Object p;
         JSONArray array = new JSONArray();
 
         try {
-            FileReader readFile = new FileReader(source);
+            FileReader readFile = new FileReader(file);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
             if (p instanceof JSONArray) {
                 array = (JSONArray) p;
             }
+        } catch (EOFException e) {
+            // handle EOF exception
         } catch (ParseException | IOException parseException) {
             parseException.printStackTrace();
+
         }
-            return array;
+        return array;
     }
 
     public void GUIView(String username) {
@@ -62,7 +70,7 @@ public class ViewCars implements ActionListener {
         model.addColumn("Price");
         JTable table=new JTable(model);
 
-        array=readfile("src/main/resources/cars.json");
+        array=readFile("src/main/resources/cars.json");
         if(array.isEmpty()){
             JOptionPane.showMessageDialog(frame, "Empty list!" );
             SellerMenu bfp = new SellerMenu();

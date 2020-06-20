@@ -1,5 +1,6 @@
 package sellermenu;
 
+import exceptions.NotJSONFileException;
 import org.json.simple.JSONArray;
 import org.junit.After;
 import org.junit.Before;
@@ -22,23 +23,30 @@ public class ViewCarsTest {
         test=null;
     }
 
-    @Test
-    public void readfile() {
-
-        JSONArray array = new JSONArray();
-        boolean aflat=false;
-
-        array=test.readfile("src/test/resources/cars.json");
-
-        if(!array.isEmpty())
-        {
-            //if(array.size()-1==2) {
-                aflat = true;
-            //}
-        }
-
-        Assert.assertTrue(aflat=true);
-
+    //readFile
+    @Test(expected = NotJSONFileException.class)
+    public void NotJSONFile() {
+        test.readFile("File.png");
     }
+
+    @Test
+    public void readEmptyFile(){
+        JSONArray expectedResult = new JSONArray();
+        JSONArray computedResult = test.readFile("src/test/resources/empty.json");
+        Assert.assertEquals(expectedResult, computedResult);
+    }
+
+    @Test
+    public void readFiveFiles(){
+        JSONArray computedResult = test.readFile("src/test/resources/five.json");
+        Assert.assertEquals(5, computedResult.size());
+    }
+
+    @Test
+    public void readTenFiles(){
+        JSONArray computedResult = test.readFile("src/test/resources/ten.json");
+        Assert.assertEquals(10, computedResult.size());
+    }
+
 
 }

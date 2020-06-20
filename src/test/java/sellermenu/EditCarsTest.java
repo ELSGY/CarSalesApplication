@@ -123,6 +123,7 @@ public class EditCarsTest {
         Assert.assertEquals(true,result);
     }
 
+    //erase function
     @Test
     public void eraseTest(){
 
