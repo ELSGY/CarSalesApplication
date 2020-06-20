@@ -1,7 +1,6 @@
 package clientmenu;
 
 import exceptions.NotJSONFileException;
-import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -35,7 +34,6 @@ public class SearchForm implements ActionListener {
         panel.setLayout(new FlowLayout());
 
         panel.setBackground(Color.lightGray);
-
 
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Index");

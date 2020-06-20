@@ -1,6 +1,5 @@
 package sellermenu;
 
-import exceptions.NotAllFieldsCompleted;
 import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.JSONObject;

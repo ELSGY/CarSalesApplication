@@ -2,7 +2,6 @@ package sellermenu;
 
 import exceptions.NotJSONFileException;
 import menu.*;
-import org.json.JSONString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

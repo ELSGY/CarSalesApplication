@@ -53,6 +53,7 @@ public class ViewRequests implements ActionListener{
 
         } else {
 
+            frame.setVisible(true);
             int index = 1;
             //Transformare din JSONArray in String[] si adaugare in tabel
             for (JSONObject obj : (Iterable<JSONObject>) array) {
@@ -90,13 +91,6 @@ public class ViewRequests implements ActionListener{
         back.setBounds(420, 620, 80, 25);
         back.addActionListener(this);
         panel.add(back);
-
-       if(array.isEmpty()){
-            frame.setVisible(false);
-        }
-        else {
-        frame.setVisible(true);
-         }
 
     }
 
@@ -156,6 +150,7 @@ public class ViewRequests implements ActionListener{
                 //Daca linia este selectata
                 list = readFile("src/main/resources/requests.json");
                 if (acc.isEnabled()) {
+                    obj.put("Username",username);
                     obj.put("Brand", table.getValueAt(position, 1).toString());
                     obj.put("Model", table.getValueAt(position, 2).toString());
                     obj.put("Year", table.getValueAt(position, 3).toString());

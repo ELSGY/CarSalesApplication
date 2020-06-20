@@ -2,7 +2,6 @@ package menu;
 
 import pages.FirstPage;
 import sellermenu.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

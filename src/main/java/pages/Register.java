@@ -7,9 +7,6 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Objects;
-
-import exceptions.NotAllFieldsCompleted;
 import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;

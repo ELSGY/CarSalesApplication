@@ -94,7 +94,6 @@ public class FirstPage implements ActionListener {
             throw new NotJSONFileException();
         }
 
-
         //Parcurgere fisier
         JSONParser parser = new JSONParser();
         Object p;
