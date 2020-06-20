@@ -133,15 +133,10 @@ public class AddCar implements ActionListener {
         return true;
     }
 
-    public int addcar(String username,String brand, String model, String year, String price, String file) throws NotAllFieldsCompleted {
+    public int addcar(String username,String brand, String model, String year, String price, String file){
 
-        if(brand.equals("") || model.equals("") || year.equals("") || price.equals("")){
-            throw new NotAllFieldsCompleted();
-        }
 
         JSONObject obj = new JSONObject();
-        Object p;
-        JSONParser parser = new JSONParser();
         JSONArray list = new JSONArray();
 
         list=readFile(file);
@@ -163,13 +158,26 @@ public class AddCar implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        String  branda,modela,yeara,pricea;
+
         if(e.getSource()==addcar)
         {
-            addcar(username,brand.getText(),model.getText(),year.getText(),price.getText(),"src/main/resources/cars.json");
-            JOptionPane.showMessageDialog(frame, "Car Added");
-            frame.setVisible(false);
-            SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu(username);
+            branda=brand.getText();
+            modela=model.getText();
+            yeara=year.getText();
+            pricea=price.getText();
+
+            if(branda.equals("") || modela.equals("") || yeara.equals("") || pricea.equals(""))
+            {
+                JOptionPane.showMessageDialog(frame, "Not fields are completed");
+            }
+            else {
+                addcar(username, branda, modela, yeara, pricea, "src/main/resources/cars.json");
+                JOptionPane.showMessageDialog(frame, "Car Added");
+                frame.setVisible(false);
+                SellerMenu bfp = new SellerMenu();
+                bfp.sellermenu(username);
+            }
         }
 
         //Actiuni pentru butonul Back

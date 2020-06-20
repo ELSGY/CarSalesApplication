@@ -16,10 +16,7 @@ public class AddCarTest {
     @Before
     public void setUp() throws Exception {
         test=new AddCar();
-        test.year=new JTextField();
-        test.brand=new JTextField();
-        test.model=new JTextField();
-        test.price=new JTextField();
+
     }
 
     @After
@@ -129,10 +126,6 @@ public class AddCarTest {
     }
 
     //addcar button
-    @Test(expected = NotAllFieldsCompleted.class)
-    public void OneFieldNotCompleted(){
-        test.addcar("admin", "","A6","2018","1000","src/test/resources/addCarTest.json");
-    }
     @Test
     public void AddOneObject(){
         JSONArray expected = test.readFile("src/test/resources/addCarTest.json");

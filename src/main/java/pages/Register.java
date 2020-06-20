@@ -8,6 +8,9 @@ import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
+
+import exceptions.NotAllFieldsCompleted;
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
@@ -105,26 +108,37 @@ public class Register implements ActionListener {
         frame.setVisible(true);
     }
 
-    public JSONArray read(String source){
+    public JSONArray readFile(String file) throws NotJSONFileException {
 
-        Object p;
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
         JSONParser parser = new JSONParser();
-        JSONArray list = new JSONArray();
-        try{
-            FileReader readFile = new FileReader(source);
+        Object p;
+        JSONArray array = new JSONArray();
+
+        try {
+            FileReader readFile = new FileReader(file);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                list =(JSONArray)p;
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
             }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
         }
-        return list;
+        return array;
     }
 
-    public void write(JSONArray list,String destination){
+    public boolean writeFile(JSONArray list,String destination) throws NotJSONFileException{
+
+        if(!destination.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
 
         try{
             File file=new File(destination);
@@ -133,52 +147,69 @@ public class Register implements ActionListener {
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    public void registerbutton(){
+    public int registerbutton(String name, String email, String username, String age, String password, String function,String file){
 
         JSONObject obj = new JSONObject();
         JSONArray list = new JSONArray();
 
         //Copiere continut deja existent cu Parser
-        list=read("src/main/resources/data.json");
+        list=readFile(file);
 
         //Adaugare continut nou
-        obj.put("Name",name.getText());
-        obj.put("Email",email.getText());
-        obj.put("Username",username.getText());
-        obj.put("Age",age.getText());
-        obj.put("Password",password.getText());
-        obj.put("Function",(String)function.getSelectedItem());
+        obj.put("Name",name);
+        obj.put("Email",email);
+        obj.put("Username",username);
+        obj.put("Age",age);
+        obj.put("Password",password);
+        obj.put("Function",function);
 
         list.add(obj);
 
         //Scriere in fisier continut nou
-        write(list,"src/main/resources/data.json");
+        writeFile(list,file);
 
-        frame.setVisible(false);
 
-        if(Objects.requireNonNull(function.getSelectedItem()).toString().equals("Client")){
+        if(function.equals("Client")){
             ClientMenu client;
             client = new ClientMenu();
             client.menu();
+
         }
-        else {
+        if(function.equals("Seller"))
+        {
             SellerMenu seller;
             seller = new SellerMenu();
-            seller.sellermenu(username.getText());
+            seller.sellermenu(username);
         }
-
+      return list.size();
     }
 
     @Override
     public void actionPerformed(ActionEvent e){
+        String namea,emaila,usernamea,agea,passworda,functiona;
 
         //Actiuni pentru butonul Register
         if(e.getSource()==register)
         {
-           registerbutton();
+        namea=name.getText();
+        emaila=email.getText();
+        usernamea=username.getText();
+        agea=age.getText();
+        functiona=(String)function.getSelectedItem();
+        passworda=password.getText();
+
+            if(namea.equals("") || emaila.equals("") || usernamea.equals("") || agea.equals("")|| passworda.equals("")|| functiona.equals("")){
+                JOptionPane.showMessageDialog(frame, "Not fields are completed");
+            }
+            else {
+                registerbutton(namea,emaila,usernamea,agea,passworda,functiona,"src/main/resources/data.json");
+                frame.setVisible(false);
+            }
         }
 
         //Actiuni pentru butonul Back

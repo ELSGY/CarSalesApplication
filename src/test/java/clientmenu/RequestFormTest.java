@@ -119,10 +119,6 @@ public class RequestFormTest {
     }
 
     //sendbutton
-    @Test(expected = NotAllFieldsCompleted.class)
-    public void OneFieldNotCompleted(){
-        req.sendbutton("src/test/resources/addCar.json", "src/test/resources/addCar.json", "","A6","2018","1000");
-    }
     @Test
     public void AddOneObject(){
         JSONArray expected = req.readFile("src/test/resources/addCar.json");

@@ -129,10 +129,7 @@ public class RequestForm implements ActionListener {
         return true;
     }
 
-    public int sendbutton(String source, String destination, String brand, String model, String year, String price) throws NotAllFieldsCompleted {
-       if(brand.equals("") || model.equals("") || year.equals("") || price.equals("")){
-           throw new NotAllFieldsCompleted();
-       }
+    public int sendbutton(String source, String destination, String brand, String model, String year, String price) {
 
         JSONObject obj = new JSONObject();
         JSONArray list;
@@ -153,14 +150,26 @@ public class RequestForm implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e){
 
+        String branda,modela,yeara,pricea;
+
         //Actiuni pentru butonul Register
         if(e.getSource()==send)
         {
-            sendbutton("src/main/resources/requests.json","src/main/resources/requests.json", brand.getText(),model.getText(), year.getText(), price.getText());
-            JOptionPane.showMessageDialog(frame, "Request sent!" );
-            frame.setVisible(false);
-            Application ap=new Application();
-            ap.start();
+            branda=brand.getText();
+            modela=model.getText();
+            yeara=year.getText();
+            pricea=price.getText();
+
+            if(branda.equals("") || modela.equals("") || yeara.equals("") || pricea.equals("")){
+                JOptionPane.showMessageDialog(frame, "Not fields are completed");
+            }
+            else {
+                sendbutton("src/main/resources/requests.json", "src/main/resources/requests.json", branda, modela, yeara, pricea);
+                JOptionPane.showMessageDialog(frame, "Request sent!");
+                frame.setVisible(false);
+                Application ap = new Application();
+                ap.start();
+            }
         }
 
         //Actiuni pentru butonul Back
