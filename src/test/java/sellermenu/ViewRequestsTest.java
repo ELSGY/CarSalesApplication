@@ -2,7 +2,6 @@ package sellermenu;
 
 import exceptions.NotJSONFileException;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
