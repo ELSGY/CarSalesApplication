@@ -1,4 +1,5 @@
 package pages;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,20 +7,19 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.io.FileReader;
 import java.io.IOException;
-
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.JSONObject;
 import org.json.simple.parser.*;
 
-
 public class Register implements ActionListener {
 
     protected JTextField username;
-   private JButton back,register;
-   private JFrame frame;
-   private JTextField password,name,email,age;
-   private JComboBox function;
+    private JButton back,register;
+    private JFrame frame;
+    private JTextField password,name,email,age;
+    private JComboBox function;
 
     public void menu() {
         JPanel panel = new JPanel();
@@ -105,66 +105,108 @@ public class Register implements ActionListener {
         frame.setVisible(true);
     }
 
-    private void registerbutton(){
+    public JSONArray readFile(String file) throws NotJSONFileException {
 
-        JSONObject obj = new JSONObject();
-        Object p;
-        JSONParser parser = new JSONParser();
-        JSONArray list = new JSONArray();
-
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader("src/main/resources/data.json");
-            BufferedReader read = new BufferedReader(readFile);
-            p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                list =(JSONArray)p;
-            }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
         }
 
-        //Adaugare continut nou
-        obj.put("Name",name.getText());
-        obj.put("Email",email.getText());
-        obj.put("Username",username.getText());
-        obj.put("Age",age.getText());
-        obj.put("Password",password.getText());
-        obj.put("Function",(String)function.getSelectedItem());
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
 
-        list.add(obj);
+        try {
+            FileReader readFile = new FileReader(file);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
+            }
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
 
-        //Scriere in fisier continut nou
+        }
+        return array;
+    }
+
+    public boolean writeFile(JSONArray list,String destination) throws NotJSONFileException{
+
+        if(!destination.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
         try{
-            File file=new File("src/main/resources/data.json");
+            File file=new File(destination);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
             fw.write(list.toJSONString());
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+            return false;
         }
-        frame.setVisible(false);
+        return true;
+    }
 
-        if(function.getSelectedItem().toString().equals("Client")){
+    public int registerbutton(String name, String email, String username, String age, String password, String function,String file){
+
+        JSONObject obj = new JSONObject();
+        JSONArray list = new JSONArray();
+
+        //Copiere continut deja existent cu Parser
+        list=readFile(file);
+
+        //Adaugare continut nou
+        obj.put("Name",name);
+        obj.put("Email",email);
+        obj.put("Username",username);
+        obj.put("Age",age);
+        obj.put("Password",password);
+        obj.put("Function",function);
+
+        list.add(obj);
+
+        //Scriere in fisier continut nou
+        writeFile(list,file);
+
+
+        if(function.equals("Client")){
             ClientMenu client;
             client = new ClientMenu();
             client.menu();
+
         }
-        else {
+        if(function.equals("Seller"))
+        {
             SellerMenu seller;
             seller = new SellerMenu();
-            seller.sellermenu(username.getText());
+            seller.sellermenu(username);
         }
-
+      return list.size();
     }
+
     @Override
     public void actionPerformed(ActionEvent e){
+        String namea,emaila,usernamea,agea,passworda,functiona;
 
         //Actiuni pentru butonul Register
         if(e.getSource()==register)
         {
-           registerbutton();
+        namea=name.getText();
+        emaila=email.getText();
+        usernamea=username.getText();
+        agea=age.getText();
+        functiona=(String)function.getSelectedItem();
+        passworda=password.getText();
+
+            if(namea.equals("") || emaila.equals("") || usernamea.equals("") || agea.equals("")|| passworda.equals("")|| functiona.equals("")){
+                JOptionPane.showMessageDialog(frame, "Not fields are completed");
+            }
+            else {
+                registerbutton(namea,emaila,usernamea,agea,passworda,functiona,"src/main/resources/data.json");
+                frame.setVisible(false);
+            }
         }
 
         //Actiuni pentru butonul Back

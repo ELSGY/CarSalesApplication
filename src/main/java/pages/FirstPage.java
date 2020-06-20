@@ -1,10 +1,10 @@
 package pages;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,14 +14,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 
-
 public class FirstPage implements ActionListener {
 
     protected JTextField username;
     private JTextField password;
     private JButton login,reg,clear;
     private JCheckBox checkseller,checkclient;
-
     private JFrame frame;
 
     public void startProgram (){
@@ -37,7 +35,6 @@ public class FirstPage implements ActionListener {
         frame.add(panel);
         panel.setLayout(null);
         panel.setBackground(Color.lightGray);
-
 
         //pages.FirstPage title
         title = new JLabel("Login");
@@ -92,7 +89,45 @@ public class FirstPage implements ActionListener {
         frame.setVisible(true);
     }
 
-    private void loginbutton(){
+    public JSONArray readFile(String source) throws NotJSONFileException {
+        if(!source.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
+        //Parcurgere fisier
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
+
+        try {
+            FileReader readFile = new FileReader(source);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
+            }
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+        }
+        return array;
+    }
+
+    public boolean findUser(JSONObject compare, JSONArray array){
+        boolean ok = false;
+        Iterator<JSONObject> itr = array.iterator();
+
+        while(itr.hasNext()) {
+            JSONObject obj = itr.next();
+
+            if (obj.get("Password").equals(compare.get("Password")) && obj.get("Function").equals(compare.get("Function")) && obj.get("Username").equals(compare.get("Username"))){
+                ok=true;
+            }
+
+        }
+        return ok;
+    }
+
+    public void loginbutton(String source){
 
         boolean ok = false;
 
@@ -101,10 +136,7 @@ public class FirstPage implements ActionListener {
         String function;
 
         //Citire date din fisier .json
-
-        JSONParser parser = new JSONParser();
         JSONObject compare = new JSONObject();
-        Object p;
         JSONArray array = new JSONArray();
 
         if ((checkclient.isSelected() && checkseller.isSelected()) || (!checkclient.isSelected() && !checkseller.isSelected())) {
@@ -112,17 +144,7 @@ public class FirstPage implements ActionListener {
             JOptionPane.showMessageDialog(frame, "Invalid");
         }
         else {
-            try {
-                FileReader readFile = new FileReader("src/main/resources/data.json");
-                BufferedReader read = new BufferedReader(readFile);
-                p = parser.parse(read);
-                if (p instanceof JSONArray) {
-                    array = (JSONArray) p;
-                }
-            } catch (ParseException | IOException parseException) {
-                parseException.printStackTrace();
-            }
-            // System.out.println(array.toString());
+            array=readFile(source);
 
             compare.put("Username", user);
             compare.put("Password", pass);
@@ -134,50 +156,38 @@ public class FirstPage implements ActionListener {
             }
 
             compare.put("Function", function);
+            ok = findUser(compare, array);
 
-            //  System.out.println(compare.toString());
-
-            Iterator<JSONObject> itr = array.iterator();
-
-            while(itr.hasNext()) {
-                JSONObject obj = itr.next();
-
-                if (obj.get("Password").equals(compare.get("Password")) && obj.get("Function").equals(compare.get("Function")) && obj.get("Username").equals(compare.get("Username"))) {
+            if (ok)
+                {
                     frame.setVisible(false);
-                    ok = true;
 
                     if (checkclient.isSelected()) {
                         ClientMenu client;
                         client = new ClientMenu();
                         client.menu();
-                        break;
                     }
 
                     if (checkseller.isSelected()) {
                         SellerMenu seller;
                         seller = new SellerMenu();
                         seller.sellermenu(username.getText());
-                        break;
                     }
                 }
-
-            }
             if(!ok) {
                 JOptionPane.showMessageDialog(frame, "Invalid");
             }
-
-
         }
     }
-    public void actionPerformed(ActionEvent e) {
+
+    public void actionPerformed(ActionEvent e){
          Register register;
 
     //Actiuni pentru butonul Log In
         if(e.getSource()==login) {
-            loginbutton();
+            loginbutton("src/main/resources/data.json");
 
         }
-
 
     //Actiuni pentru butonul Create an account
     if(e.getSource()==reg){
@@ -195,7 +205,5 @@ public class FirstPage implements ActionListener {
     }
 
     }
-
-
 
 }

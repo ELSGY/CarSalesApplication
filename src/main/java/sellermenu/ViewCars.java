@@ -1,29 +1,51 @@
 package sellermenu;
 
+import exceptions.NotJSONFileException;
 import menu.*;
-import org.json.JSONString;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.EOFException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 
 public class ViewCars implements ActionListener {
     protected String username;
     private JFrame frame;
     private JButton back;
+
+    public JSONArray readFile(String file) throws NotJSONFileException {
+
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
+
+        try {
+            FileReader readFile = new FileReader(file);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
+            }
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
+        }
+        return array;
+    }
 
     public void GUIView(String username) {
         this.username=username;
@@ -33,6 +55,7 @@ public class ViewCars implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
         panel.setLayout(new FlowLayout());
+        JSONArray array = new JSONArray();
 
         panel.setBackground(Color.lightGray);
 
@@ -46,23 +69,7 @@ public class ViewCars implements ActionListener {
         model.addColumn("Price");
         JTable table=new JTable(model);
 
-
-        //Parcurgere fisier cars.json pentru preluare detalii masini
-        JSONParser parser = new JSONParser();
-        Object p;
-        JSONArray array = new JSONArray();
-
-        try {
-            FileReader readFile = new FileReader("src/main/resources/cars.json");
-            BufferedReader read = new BufferedReader(readFile);
-            p = parser.parse(read);
-            if (p instanceof JSONArray) {
-                array = (JSONArray) p;
-            }
-        } catch (ParseException | IOException parseException) {
-            parseException.printStackTrace();
-        }
-
+        array=readFile("src/main/resources/cars.json");
         if(array.isEmpty()){
             JOptionPane.showMessageDialog(frame, "Empty list!" );
             SellerMenu bfp = new SellerMenu();
@@ -106,7 +113,6 @@ public class ViewCars implements ActionListener {
 
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -117,6 +123,5 @@ public class ViewCars implements ActionListener {
             SellerMenu bfp = new SellerMenu();
             bfp.sellermenu(username);
         }
-
     }
 }

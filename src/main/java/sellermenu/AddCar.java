@@ -1,11 +1,11 @@
 package sellermenu;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +14,7 @@ import java.io.*;
 
 public class AddCar implements ActionListener {
     private JFrame frame;
-    private JTextField year,brand,model,price;
+    public JTextField year,brand,model,price;
     private JButton back,addcar;
     protected String username;
 
@@ -85,60 +85,98 @@ public class AddCar implements ActionListener {
 
         frame.setVisible(true);
 
-
     }
 
-    public void addcar(String username){
+    public JSONArray readFile(String file) throws NotJSONFileException {
 
-        JSONObject obj = new JSONObject();
-        Object p;
-        JSONParser parser = new JSONParser();
-        JSONArray list = new JSONArray();
-
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader("src/main/resources/cars.json");
-            BufferedReader read = new BufferedReader(readFile);
-            p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                list =(JSONArray)p;
-            }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
         }
 
-        //Adaugare continut nou
-        obj.put("Username",username);
-        obj.put("Brand",brand.getText());
-        obj.put("Model",model.getText());
-        obj.put("Year",year.getText());
-        obj.put("Price",price.getText());
+        JSONParser parser = new JSONParser();
+        Object p;
+        JSONArray array = new JSONArray();
 
-        list.add(obj);
+        try {
+            FileReader readFile = new FileReader(file);
+            BufferedReader read = new BufferedReader(readFile);
+            p = parser.parse(read);
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
+            }
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
+        }
+        return array;
+    }
+
+    public boolean writeFile(JSONArray list, String JSONFile) throws NotJSONFileException{
+
+        if(!JSONFile.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
 
         //Scriere in fisier continut nou
         try{
-            File file=new File("src/main/resources/cars.json");
+            File file=new File(JSONFile);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
             fw.write(list.toJSONString());
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+            return false;
         }
+        return true;
+    }
 
+    public int addcar(String username,String brand, String model, String year, String price, String file){
+
+
+        JSONObject obj = new JSONObject();
+        JSONArray list = new JSONArray();
+
+        list=readFile(file);
+
+        //Adaugare continut nou
+        obj.put("Username",username);
+        obj.put("Brand",brand);
+        obj.put("Model",model);
+        obj.put("Year",year);
+        obj.put("Price",price);
+
+        list.add(obj);
+
+        writeFile(list,file);
+
+       return list.size();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        String  branda,modela,yeara,pricea;
+
         if(e.getSource()==addcar)
         {
-            addcar(username);
-            JOptionPane.showMessageDialog(frame, "Car Added");
-            frame.setVisible(false);
-            SellerMenu bfp = new SellerMenu();
-            bfp.sellermenu(username);
+            branda=brand.getText();
+            modela=model.getText();
+            yeara=year.getText();
+            pricea=price.getText();
+
+            if(branda.equals("") || modela.equals("") || yeara.equals("") || pricea.equals(""))
+            {
+                JOptionPane.showMessageDialog(frame, "Not fields are completed");
+            }
+            else {
+                addcar(username, branda, modela, yeara, pricea, "src/main/resources/cars.json");
+                JOptionPane.showMessageDialog(frame, "Car Added");
+                frame.setVisible(false);
+                SellerMenu bfp = new SellerMenu();
+                bfp.sellermenu(username);
+            }
         }
 
         //Actiuni pentru butonul Back

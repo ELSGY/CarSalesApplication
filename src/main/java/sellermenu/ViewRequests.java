@@ -1,18 +1,17 @@
 package sellermenu;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-
 
 public class ViewRequests implements ActionListener{
     protected String username;
@@ -21,6 +20,8 @@ public class ViewRequests implements ActionListener{
     private JButton rej;
     private JButton acc;
     private JButton back;
+    private JSONArray list;
+
     public void GUIReq(String username) {
         this.username=username;
         JPanel panel = new JPanel();
@@ -52,6 +53,7 @@ public class ViewRequests implements ActionListener{
 
         } else {
 
+            frame.setVisible(true);
             int index = 1;
             //Transformare din JSONArray in String[] si adaugare in tabel
             for (JSONObject obj : (Iterable<JSONObject>) array) {
@@ -90,49 +92,54 @@ public class ViewRequests implements ActionListener{
         back.addActionListener(this);
         panel.add(back);
 
-       if(array.isEmpty()){
-            frame.setVisible(false);
-        }
-        else {
-        frame.setVisible(true);
-         }
-
     }
 
-    private JSONArray readFile(String filePath){
-        JSONArray array = new JSONArray();
+    public JSONArray readFile(String file) throws NotJSONFileException {
+
+        if(!file.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
         JSONParser parser = new JSONParser();
         Object p;
+        JSONArray array = new JSONArray();
 
-        //Copiere continut deja existent cu Parser
-        try{
-            FileReader readFile = new FileReader(filePath);
+        try {
+            FileReader readFile = new FileReader(file);
             BufferedReader read = new BufferedReader(readFile);
             p = parser.parse(read);
-            if(p instanceof JSONArray)
-            {
-                array =(JSONArray)p;
+            if (p instanceof JSONArray) {
+                array = (JSONArray) p;
             }
-        } catch (ParseException | IOException ex) {
-            ex.printStackTrace();
+        } catch (EOFException e) {
+            // handle EOF exception
+        } catch (ParseException | IOException parseException) {
+            parseException.printStackTrace();
+
         }
         return array;
-
     }
 
-    private void writeFile (JSONArray arr, String filepath){ //Scriere elemente in fisier
+    public boolean writeFile(JSONArray list, String JSONFile) throws NotJSONFileException{
+
+        if(!JSONFile.endsWith(".json")){
+            throw new NotJSONFileException();
+        }
+
+        //Scriere in fisier continut nou
         try{
-            File file=new File(filepath);
+            File file=new File(JSONFile);
             FileWriter fw=new FileWriter(file.getAbsoluteFile());
-            fw.write(arr.toJSONString());
+            fw.write(list.toJSONString());
             fw.close();
         } catch (IOException ex) {
             ex.printStackTrace();
+            return false;
         }
+        return true;
     }
 
-    JSONArray list;
-    private void ActionButtons(){
+    public void ActionButtons(){
         org.json.JSONObject obj = new org.json.JSONObject();
 
         try {
@@ -142,8 +149,8 @@ public class ViewRequests implements ActionListener{
             if(position >= 0) {
                 //Daca linia este selectata
                 list = readFile("src/main/resources/requests.json");
-
                 if (acc.isEnabled()) {
+                    obj.put("Username",username);
                     obj.put("Brand", table.getValueAt(position, 1).toString());
                     obj.put("Model", table.getValueAt(position, 2).toString());
                     obj.put("Year", table.getValueAt(position, 3).toString());
@@ -167,7 +174,7 @@ public class ViewRequests implements ActionListener{
         }
     }
 
-    private void UpdateTable(){
+    public void UpdateTable(){
         DefaultTableModel mod =new DefaultTableModel();
         mod.addColumn("Index");
         mod.addColumn("Brand");
@@ -220,9 +227,5 @@ public class ViewRequests implements ActionListener{
             SellerMenu sel = new SellerMenu();
             sel.sellermenu(username);
         }
-
-
     }
-
-
 }

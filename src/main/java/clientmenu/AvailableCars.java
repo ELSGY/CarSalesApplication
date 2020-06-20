@@ -1,24 +1,23 @@
 package clientmenu;
 
+import exceptions.NotJSONFileException;
 import menu.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class AvailableCars implements ActionListener {
 
     private JFrame frame;
     private JButton back;
+
     public void GUIAv(){
         JPanel panel = new JPanel();
         frame = new JFrame("Available");
@@ -82,7 +81,11 @@ public class AvailableCars implements ActionListener {
 
     }
 
-    private JSONArray readFile(String file){
+    public JSONArray readFile(String file) throws NotJSONFileException {
+       if(!file.endsWith(".json")){
+           throw new NotJSONFileException();
+       }
+
         JSONParser parser = new JSONParser();
         Object p;
         JSONArray array = new JSONArray();
@@ -94,8 +97,11 @@ public class AvailableCars implements ActionListener {
             if (p instanceof JSONArray) {
                 array = (JSONArray) p;
             }
+        } catch (EOFException e) {
+            // handle EOF exception
         } catch (ParseException | IOException parseException) {
             parseException.printStackTrace();
+
         }
         return array;
     }

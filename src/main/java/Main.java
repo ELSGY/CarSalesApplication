@@ -19,21 +19,17 @@ public class Main{
 
         File to = new File("target\\src\\main\\resources");
 
-
         try {
             copyFile(from_data, to);
             copyFile(from_car, to);
             copyFile(from_req, to);
 
-            //System.out.println("File copied successfully.");
         }
         catch (IOException ex) {
             ex.printStackTrace();
         }
         FirstPage first=new FirstPage();
         first.startProgram();
-
-
 
     }
 }
